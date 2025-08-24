@@ -6,6 +6,7 @@ import SignOutButton from "./SignOutButton";
 
 const adminNavLinks = [
   { name: "Dashboard", href: "/admin" },
+  { name: "Blog Management", href: "/admin/blog" },
   { name: "Resume Editor", href: "/admin/resume" }, // For a future task
   { name: "Analytics", href: "/admin/analytics" },   // For a future task
 ];

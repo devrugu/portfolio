@@ -1,5 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    esmExternals: 'loose'
+  },
+  compiler: {
+    styledComponents: true,
+  },
   images: {
     remotePatterns: [
       {
@@ -10,6 +16,21 @@ const nextConfig = {
       },
     ],
   },
+  webpack: (config) => {
+    config.module = {
+      ...config.module,
+      exprContextCritical: false,
+    };
+    return config;
+  },
+  transpilePackages: [
+    'sanity',
+    '@sanity/ui',
+    'next-sanity',
+    '@sanity/vision',
+    'framer-motion',
+    '@sanity/icons',
+  ],
 };
 
 export default nextConfig;

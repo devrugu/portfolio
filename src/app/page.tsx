@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import { client } from '@/sanity/client';
 import { urlFor } from '@/sanity/image';
-import Link from 'next/link';
 import AgeCounter from '@/components/AgeCounter';
+import TextScramble from '@/components/TextScramble';
 
 // --- Data Fetching (no change) ---
 async function getAuthorImage() {
@@ -67,9 +67,10 @@ export default async function HomePage() {
       <section className="flex flex-col-reverse md:flex-row items-center gap-12 mb-24">
         {/* Left Column (Content) */}
         <div className="md:w-2/3">
-          <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
-            <span className="text-accent">Hi,</span> I'm Uğurcan Yılmaz
-          </h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+              <span className="text-accent"><TextScramble text="Hi," /></span>{' '}
+              <TextScramble text="I'm Uğurcan Yılmaz" />
+            </h1>
           <p className="text-lg text-on-background mb-4">
             I'm a Computer Engineer based in İstanbul, Türkiye, currently working as a Software Engineer at TÜBİTAK BİLGEM. I specialize in developing high-performance, real-time signal processing software using C++ and the Qt framework.
           </p>

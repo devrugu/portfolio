@@ -20,6 +20,7 @@ export const authorType = defineType({
     }),
     defineField({
       name: 'image',
+      title: 'Image',
       type: 'image',
       options: {
         hotspot: true,

@@ -1,13 +1,23 @@
 import dbConnect from "@/lib/mongodb";
 import ResumeModel from "@/models/Resume";
-import { Resume } from "@/types/resume"; // We can reuse our type definition!
+import { Resume } from "@/types/resume";
+import Image from "next/image";
+import { client } from "@/sanity/client";
+import { urlFor } from "@/sanity/image";
 
 // This function fetches the resume data from the database.
 async function getResumeData() {
+  // Connect to MongoDB
   await dbConnect();
-  // We fetch the one resume belonging to our admin user.
   const resume = await ResumeModel.findOne({ userId: "admin_user_01" }).lean();
-  return resume as Resume | null;
+  if (!resume) return null;
+
+  // ALSO, connect to Sanity to get the author image
+  const authorQuery = `*[_type == "author"][0] { image }`; // Get the first author's image
+  const authorData = await client.fetch(authorQuery);
+
+  // Combine the data
+  return { ...resume, authorImage: authorData?.image } as Resume & { authorImage?: any };
 }
 
 // The page is now an async component
@@ -26,19 +36,38 @@ export default async function ResumePage() {
     );
   }
 
-  const { personalInfo, experience, education, skills } = resume;
+  const { personalInfo, experience, education, skills, authorImage } = resume;
 
   return (
     <div>
       {/* Header Section */}
-      <div className="text-center mb-12">
-        <h1 className="text-5xl font-bold text-primary">{personalInfo.name}</h1>
-        <p className="text-lg text-gray-400 mt-2">
-          {personalInfo.location} | {personalInfo.phone} | {personalInfo.email} |
-          <a href={personalInfo.website} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline ml-1">
-            {personalInfo.website}
-          </a>
-        </p>
+      <div className="flex flex-col md:flex-row items-center justify-between mb-12">
+        {/* Profile Image */}
+        {authorImage && (
+          <div className="md:order-2 mb-6 md:mb-0">
+            <Image
+              src={urlFor(authorImage).width(200).height(200).url()}
+              alt={personalInfo.name}
+              width={200}
+              height={200}
+              className="rounded-full border-4 border-gray-700/50 object-cover"
+              priority // Helps the image load faster
+            />
+          </div>
+        )}
+        {/* Personal Details */}
+        <div className="text-center md:text-left md:order-1">
+          <h1 className="text-5xl font-bold text-primary">{personalInfo.name}</h1>
+          <p className="text-lg text-gray-400 mt-2">
+            {personalInfo.location} | {personalInfo.phone}
+          </p>
+          <p className="text-lg text-gray-400 mt-1">
+            {personalInfo.email} |
+            <a href={personalInfo.website} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline ml-1">
+              {personalInfo.website}
+            </a>
+          </p>
+        </div>
       </div>
 
       {/* Summary Section */}

@@ -4,6 +4,7 @@ import { Resume } from "@/types/resume";
 import Image from "next/image";
 import { client } from "@/sanity/client";
 import { urlFor } from "@/sanity/image";
+import ResumeDownloadButton from "@/components/ResumeDownloadButton";
 
 // This function fetches the resume data from the database.
 async function getResumeData() {
@@ -38,8 +39,14 @@ export default async function ResumePage() {
 
   const { personalInfo, experience, education, skills, authorImage } = resume;
 
+  const fileName = `${resume.personalInfo.name.replace(' ', '_')}_Resume.pdf`;
+
   return (
     <div>
+      <div className="mb-8 text-center md:text-right">
+        <ResumeDownloadButton elementId="resume-to-print" fileName={fileName} />
+      </div>
+      <div id="resume-to-print">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row items-center justify-between mb-12">
         {/* Profile Image */}
@@ -118,6 +125,7 @@ export default async function ResumePage() {
           ))}
         </div>
       </section>
+      </div>
     </div>
   );
 }

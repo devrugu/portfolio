@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import ResumeModel from "@/models/Resume";
 
+export const dynamic = 'force-dynamic';
+
 // A utility function to get the user's ID from the session
 async function getUserId() {
   const session = await getServerSession();

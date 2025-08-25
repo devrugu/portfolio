@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { client } from '@/sanity/client';
 import { urlFor } from '@/sanity/image';
 import Link from 'next/link';
+import AgeCounter from '@/components/AgeCounter';
 
 // --- Data Fetching (no change) ---
 async function getAuthorImage() {
@@ -58,6 +59,7 @@ const projects = [
 
 export default async function HomePage() {
   const authorImage = await getAuthorImage();
+  const birthDate = new Date('2000-01-01T00:00:00');
 
   return (
     <div>
@@ -96,17 +98,22 @@ export default async function HomePage() {
 
         {/* Right Column (Image) */}
         <div className="md:w-1/3 flex justify-center">
-          {authorImage && (
-            <Image
-              src={urlFor(authorImage).width(300).height(300).url()}
-              alt="Uğurcan Yılmaz"
-              width={300}
-              height={300}
-              className="rounded-full border-4 border-gray-700/50 object-cover"
-              priority
-            />
-          )}
-        </div>
+  {/* --- NEW WRAPPER --- */}
+  <div className="flex flex-col items-center">
+    {authorImage && (
+      <Image
+      src={urlFor(authorImage).width(300).height(300).url()}
+      alt="Uğurcan Yılmaz"
+      width={300}
+      height={300}
+      className="rounded-full border-4 border-gray-700/50 object-cover"
+      priority
+      />
+    )}
+    <AgeCounter birthDate={birthDate} />
+   
+  </div>
+</div>
       </section>
 
       {/* --- Projects Section --- */}

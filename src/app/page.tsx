@@ -3,6 +3,9 @@ import { client } from '@/sanity/client';
 import { urlFor } from '@/sanity/image';
 import AgeCounter from '@/components/AgeCounter';
 import TextScramble from '@/components/TextScramble';
+import FadeIn from '@/components/FadeIn';
+import AnimatedCard from '@/components/AnimatedCard';
+import StaggeredList from '@/components/StaggeredList';
 
 // --- Data Fetching (no change) ---
 async function getAuthorImage() {
@@ -62,6 +65,7 @@ export default async function HomePage() {
   const birthDate = new Date('2000-01-01T00:00:00');
 
   return (
+    <FadeIn>
     <div>
       {/* --- Hero Section --- */}
       <section className="flex flex-col-reverse md:flex-row items-center gap-12 mb-24">
@@ -118,24 +122,30 @@ export default async function HomePage() {
       </section>
 
       {/* --- Projects Section --- */}
+      
       <section>
-        <h2 className="text-4xl font-bold text-primary mb-8">Projects</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {projects.map((project, index) => (
-            <a href={project.link} key={index} target="_blank" rel="noopener noreferrer" className="bg-gray-800/50 p-6 rounded-lg border border-gray-700/50 flex flex-col hover:border-accent transition-colors">
-              <h3 className="text-xl font-semibold text-accent mb-2">{project.title}</h3>
-              <p className="text-on-background flex-grow mb-4">{project.description}</p>
-              <div className="flex flex-wrap gap-2">
-                {project.tags.map((tag, tagIndex) => (
-                  <span key={tagIndex} className={`text-xs font-semibold px-2.5 py-1 rounded-full ${project.tagColors[tagIndex] || 'bg-gray-600'} text-white`}>
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </a>
-          ))}
-        </div>
-      </section>
+    <h2 className="text-4xl font-bold text-primary mb-8">Projects</h2>
+    <StaggeredList>
+      {projects.map((project, index) => (
+        <AnimatedCard key={index} href={project.link} index={index}>
+          <div className="flex flex-col h-full">
+            <h3 className="text-xl font-semibold text-accent mb-2">{project.title}</h3>
+            <p className="text-on-background flex-grow mb-4">{project.description}</p>
+            <div className="flex flex-wrap gap-2">
+              {project.tags.map((tag, tagIndex) => (
+                <span key={tagIndex} className={`text-xs font-semibold px-2.5 py-1 rounded-full ${project.tagColors[tagIndex] || 'bg-gray-600'} text-white`}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </AnimatedCard>
+      ))}
+    </StaggeredList>
+  </section>
+  
+      
     </div>
+    </FadeIn>
   );
 }

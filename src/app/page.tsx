@@ -56,7 +56,7 @@ const projects = [
     description: "A simple regex engine built with JavaScript to parse and match patterns in strings, with a focus on understanding the core mechanics.",
     tags: ["JavaScript", "HTML/CSS"],
     tagColors: ["bg-tagColors-javascript", "bg-orange-500"],
-    link: "#"
+    link: "/projects/regex-engine"
   },
 ];
 

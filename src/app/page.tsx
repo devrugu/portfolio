@@ -86,7 +86,7 @@ export default async function HomePage() {
             <li>Developing sonar algorithms and real-time processing applications.</li>
             <li>Optimizing MATLAB code generation for integration into C++ systems.</li>
             <li>Enhancing system performance and developing full-stack applications.</li>
-          </ul>https://github.com/devrugu https://tr.linkedin.com/in/kazuhira
+          </ul>
           {/* Social Links */}
           <div className="flex items-center gap-4">
             <TrackedLink

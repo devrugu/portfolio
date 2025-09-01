@@ -1,29 +1,37 @@
 export default function AnalyticsPage() {
-  // You can construct the direct link to your GA Realtime report.
-  // This part is a bit tricky as the URL can change, but a link to the main GA page is always safe.
+  // Direct link to the main Google Analytics dashboard.
   const gaDashboardUrl = "https://analytics.google.com/";
 
   return (
     <div>
-      <h1 className="text-4xl font-bold text-primary mb-8">Website Analytics</h1>
-      <div className="bg-gray-900/50 p-6 rounded-lg border border-gray-700/50">
-        <h2 className="text-2xl font-semibold text-accent mb-4">Live Data</h2>
-        <p className="text-on-background mb-6">
-          Visitor statistics (daily, weekly, monthly), page views, and geographic data are all being collected by Google Analytics.
-          <br />
-          Please note that data will only appear here after the site has been deployed and has received visitors. No data will be shown for `localhost` traffic.
-        </p>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-4xl font-bold text-primary">Website Analytics</h1>
+        {/* --- NEW: Direct link to Google Analytics --- */}
         <a
           href={gaDashboardUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block bg-accent text-on-primary font-bold py-3 px-6 rounded-lg hover:bg-accent-hover transition-colors text-lg"
+          className="inline-block bg-accent text-on-primary font-bold py-2 px-4 rounded-lg hover:bg-accent-hover transition-colors"
         >
-          View Full Analytics Dashboard
+          View Full Report in GA
         </a>
-        <p className="text-gray-400 text-sm mt-4">
-          You will need to be logged into the Google account associated with your Analytics property to view the dashboard.
-        </p>
+      </div>
+
+      <p className="text-on-background mb-6">
+        This is a live overview of your website's key metrics, powered by Google Looker Studio. For a more detailed analysis, use the button above.
+      </p>
+      
+      {/* Embedded Looker Studio Dashboard */}
+      <div className="w-full h-[75vh] bg-gray-900/50 rounded-lg border border-gray-700/50 overflow-hidden">
+        <iframe
+          width="100%"
+          height="100%"
+          src="https://lookerstudio.google.com/embed/reporting/24ac1e0c-3ac5-47b6-948d-056dd78ebaa8/page/BARWF" // Paste the same Looker Studio SRC URL
+          frameBorder="0"
+          style={{ border: 0 }}
+          allowFullScreen
+          sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+        ></iframe>
       </div>
     </div>
   );

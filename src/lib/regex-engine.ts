@@ -23,37 +23,67 @@ class NFA {
   }
 }
 
-// --- Core Regex Engine Class ---
+// --- Core Regex Engine Class (Upgraded) ---
 export class RegexEngine {
   private dfa: State | null = null;
-  
-  // FIX: Type the operatorPrecedence object to allow string indexing
-  private static operatorPrecedence: { [key: string]: number } = { 
-    '|': 0, '.': 1, '*': 2, '+': 2 
+  private static operatorPrecedence: { [key: string]: number } = {
+    '|': 0, '.': 1, '*': 2, '+': 2,
   };
 
-  public compile(pattern: string): void {
-    if (!pattern) {
-        this.dfa = null;
-        return;
+  private expandCaseInsensitive(pattern: string): string {
+    let expanded = '';
+    for (const char of pattern) {
+      const lower = char.toLowerCase();
+      const upper = char.toUpperCase();
+      if (lower !== upper) {
+        expanded += `(${lower}|${upper})`;
+      } else {
+        expanded += char;
+      }
     }
+    return expanded;
+  }
+
+  // --- UPDATED: The compile method now accepts a 'wholeWord' flag ---
+  public compile(pattern: string, flags: { caseInsensitive: boolean; wholeWord: boolean }): void {
+    if (!pattern) {
+      this.dfa = null;
+      return;
+    }
+
     try {
-        const processedPattern = this.addConcatOperators(pattern);
-        const postfixPattern = this.convertToPostfix(processedPattern);
-        const nfa = this.postfixToNFA(postfixPattern);
-        this.dfa = this.nfaToDFA(nfa);
+      let patternToCompile = pattern;
+
+      // 1. Apply case-insensitivity first
+      if (flags.caseInsensitive) {
+        patternToCompile = this.expandCaseInsensitive(patternToCompile);
+      }
+
+      // 2. Wrap the pattern for whole word matching
+      // This is a simplified way to handle word boundaries. A true \b would require a more complex NFA.
+      // For this demo, we assume "words" are separated by spaces.
+      // This is a conceptual addition to the pattern itself.
+      if (flags.wholeWord) {
+        // This is a simplification. True word boundaries (\b) are complex.
+        // We will handle the actual word check in the search function.
+      }
+
+      const processedPattern = this.addConcatOperators(patternToCompile);
+      const postfixPattern = this.convertToPostfix(processedPattern);
+      const nfa = this.postfixToNFA(postfixPattern);
+      this.dfa = this.nfaToDFA(nfa);
     } catch (e) {
-        console.error("Invalid regex pattern", e);
-        this.dfa = null;
+      console.error("Invalid regex pattern", e);
+      this.dfa = null;
+      throw new Error("Invalid Pattern");
     }
   }
 
-  public search(text: string): { match: string; index: number }[] {
-    if (!this.dfa) {
-      return [];
-    }
+  // --- UPDATED: The search method now accepts the wholeWord flag to filter results ---
+  public search(text: string, flags: { wholeWord: boolean }): { match: string; index: number }[] {
+    if (!this.dfa) return [];
 
-    const matches: { match: string; index: number }[] = [];
+    const allMatches: { match: string; index: number }[] = [];
     for (let i = 0; i < text.length; i++) {
       let currentState = this.dfa;
       for (let j = i; j < text.length; j++) {
@@ -62,14 +92,30 @@ export class RegexEngine {
           currentState = currentState.transitions.get(char)!;
           if (currentState.isEndState) {
             const match = text.substring(i, j + 1);
-            matches.push({ match, index: i });
+            allMatches.push({ match, index: i });
           }
         } else {
           break;
         }
       }
     }
-    return this.filterSubmatches(matches);
+    
+    let filteredMatches = this.filterSubmatches(allMatches);
+
+    // --- NEW: Post-filter for "whole word" matches ---
+    if (flags.wholeWord) {
+      filteredMatches = filteredMatches.filter(match => {
+        const precedingChar = text[match.index - 1];
+        const followingChar = text[match.index + match.match.length];
+
+        const isStartBoundary = precedingChar === undefined || /\s/.test(precedingChar);
+        const isEndBoundary = followingChar === undefined || /\s/.test(followingChar);
+
+        return isStartBoundary && isEndBoundary;
+      });
+    }
+
+    return filteredMatches;
   }
   
   private filterSubmatches(matches: { match: string; index: number }[]): { match: string; index: number }[] {

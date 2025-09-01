@@ -6,7 +6,6 @@ import { useDebounce } from 'use-debounce';
 import { motion, AnimatePresence } from 'framer-motion';
 import HighlightedText from '@/components/HighlightedText';
 
-// Define a type for our match results for better code safety
 type Match = {
   match: string;
   index: number;
@@ -14,30 +13,27 @@ type Match = {
 
 export default function RegexEnginePage() {
   // --- STATE MANAGEMENT ---
-  // Inputs from the user
-  const [pattern, setPattern] = useState<string>("(a|b)*a");
-  const [testString, setTestString] = useState<string>("a very blue boat and a big baboon");
-  
-  // Settings for the demo
+  const [pattern, setPattern] = useState<string>("a");
+  const [testString, setTestString] = useState<string>("a ababab baba a baba");
   const [isRealtime, setIsRealtime] = useState<boolean>(true);
-  
-  // Outputs from the engine
   const [matches, setMatches] = useState<Match[]>([]);
   const [error, setError] = useState<string | null>(null);
+  
+  // Updated state for flags
+  const [flags, setFlags] = useState({
+    caseInsensitive: false,
+    wholeWord: true, // Let's make this the default for your example
+  });
 
   // --- DEBOUNCING ---
-  // Debounce the inputs for a smoother real-time experience
   const [debouncedPattern] = useDebounce(pattern, 300);
   const [debouncedTestString] = useDebounce(testString, 300);
+  const [debouncedFlags] = useDebounce(flags, 300);
 
-  // --- ENGINE INSTANTIATION ---
-  // useMemo ensures we only create a new engine instance when necessary, not on every render
   const regexEngine = useMemo(() => new RegexEngine(), []);
 
   // --- CORE LOGIC ---
-  // A single function to compile the pattern and run the search
   const runSearch = () => {
-    // Prevent running on empty inputs, which can be slow
     if (!pattern || !testString) {
       setMatches([]);
       setError(null);
@@ -46,26 +42,35 @@ export default function RegexEnginePage() {
 
     try {
       setError(null);
-      // 1. Compile the pattern
-      regexEngine.compile(pattern);
-      // 2. Run the search
-      const foundMatches = regexEngine.search(testString);
-      // 3. Update the state with the results
+      // Pass both flags to the engine
+      regexEngine.compile(pattern, { 
+        caseInsensitive: flags.caseInsensitive, 
+        wholeWord: flags.wholeWord 
+      });
+      const foundMatches = regexEngine.search(testString, { 
+        wholeWord: flags.wholeWord 
+      });
       setMatches(foundMatches);
     } catch (e: any) {
-      // Catch errors from invalid regex patterns
       setError("Invalid Regex Pattern");
       setMatches([]);
     }
   };
   
-  // --- REAL-TIME EXECUTION ---
-  // A useEffect hook that triggers the search when debounced inputs change in real-time mode
   useEffect(() => {
     if (isRealtime) {
       runSearch();
     }
-  }, [debouncedPattern, debouncedTestString, isRealtime]); // Dependencies for the effect
+  }, [debouncedPattern, debouncedTestString, debouncedFlags, isRealtime]);
+
+  // --- EVENT HANDLERS ---
+  const handleFlagChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setFlags(prevFlags => ({
+      ...prevFlags,
+      [name]: checked,
+    }));
+  };
 
   // --- UI RENDER ---
   return (
@@ -78,15 +83,11 @@ export default function RegexEnginePage() {
         </p>
       </div>
 
-      {/* Main Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        
         {/* Left Column: Inputs and Controls */}
         <div className="space-y-6">
           <div>
-            <label htmlFor="pattern" className="block text-on-background font-semibold mb-2">
-              Regular Expression Pattern
-            </label>
+            <label htmlFor="pattern" className="block text-on-background font-semibold mb-2">Regular Expression Pattern</label>
             <input
               id="pattern"
               type="text"
@@ -96,11 +97,8 @@ export default function RegexEnginePage() {
               className="w-full font-mono bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-primary focus:outline-none focus:ring-2 focus:ring-accent"
             />
           </div>
-
           <div>
-            <label htmlFor="testString" className="block text-on-background font-semibold mb-2">
-              Test String
-            </label>
+            <label htmlFor="testString" className="block text-on-background font-semibold mb-2">Test String</label>
             <textarea
               id="testString"
               value={testString}
@@ -111,39 +109,38 @@ export default function RegexEnginePage() {
             />
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="realtime-toggle"
-                checked={isRealtime}
-                onChange={(e) => setIsRealtime(e.target.checked)}
-                className="h-4 w-4 rounded bg-gray-700 border-gray-600 text-accent focus:ring-accent"
-              />
-              <label htmlFor="realtime-toggle" className="text-on-background">
-                Real-time Execution
-              </label>
+          {/* Flags and Controls Section */}
+          <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700/50">
+            <div className="flex items-center justify-between">
+              {/* Flag Checkboxes */}
+              <div className="flex items-center gap-6">
+                <span className="font-semibold text-primary">Options:</span>
+                <div className="flex items-center gap-2">
+                  <input type="checkbox" id="whole-word-flag" name="wholeWord" checked={flags.wholeWord} onChange={handleFlagChange} className="h-4 w-4 rounded bg-gray-700 border-gray-600 text-accent focus:ring-accent" />
+                  <label htmlFor="whole-word-flag" className="text-on-background">Match Whole Word</label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input type="checkbox" id="case-insensitive-flag" name="caseInsensitive" checked={flags.caseInsensitive} onChange={handleFlagChange} className="h-4 w-4 rounded bg-gray-700 border-gray-600 text-accent focus:ring-accent" />
+                  <label htmlFor="case-insensitive-flag" className="text-on-background">Case-Insensitive</label>
+                </div>
+              </div>
+              
+              {/* Real-time Toggle */}
+              <div className="flex items-center gap-2">
+                <input type="checkbox" id="realtime-toggle" checked={isRealtime} onChange={(e) => setIsRealtime(e.target.checked)} className="h-4 w-4 rounded bg-gray-700 border-gray-600 text-accent focus:ring-accent" />
+                <label htmlFor="realtime-toggle" className="text-on-background">Real-time</label>
+              </div>
             </div>
-            
-            {/* Animated "Run Search" Button */}
-            <AnimatePresence>
-              {!isRealtime && (
-                <motion.div
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 10 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <button
-                    onClick={runSearch}
-                    className="bg-accent text-on-primary font-bold py-2 px-4 rounded-lg hover:bg-accent-hover transition-colors"
-                  >
-                    Run Search
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
+          
+          {/* Animated "Run Search" Button */}
+          <AnimatePresence>
+            {!isRealtime && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex justify-end">
+                <button onClick={runSearch} className="bg-accent text-on-primary font-bold py-2 px-4 rounded-lg hover:bg-accent-hover transition-colors">Run Search</button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Right Column: Results */}

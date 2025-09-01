@@ -1,5 +1,7 @@
 "use client";
 
+import { motion } from 'framer-motion';
+
 type Match = {
   match: string;
   index: number;
@@ -30,9 +32,15 @@ export default function HighlightedText({ text, matches }: HighlightedTextProps)
 
     // 2. Add the highlighted match itself
     parts.push(
-      <mark key={i} className="bg-accent/40 text-primary rounded px-1 py-0.5">
-        {match.match}
-      </mark>
+        <motion.mark
+            key={`${match.index}-${match.match}`} // A more stable key for animations
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            className="bg-accent/40 text-primary rounded px-1 py-0.5"
+        >
+            {match.match}
+        </motion.mark>
     );
 
     // 3. Update our position in the string
@@ -45,5 +53,5 @@ export default function HighlightedText({ text, matches }: HighlightedTextProps)
   }
 
   // Render the parts inside a <pre> tag to maintain formatting
-  return <pre>{parts}</pre>;
+  return <pre className="whitespace-pre-wrap">{parts}</pre>;
 }

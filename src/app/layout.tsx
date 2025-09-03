@@ -24,9 +24,9 @@ export default function RootLayout({
       <body className={`${inter.className} bg-background text-on-background`}>
         <div className="flex flex-col min-h-screen">
           <Header />
-          <main className="flex-grow container mx-auto max-w-5xl px-4 py-8">
+          <div className="flex-grow container mx-auto max-w-5xl px-4 py-8">
             {children}
-          </main>
+          </div>
           <Footer />
         </div>
       </body>

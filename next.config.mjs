@@ -1,5 +1,25 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // This is crucial for Pyodide to work correctly in development,
+  // as it allows the browser to load resources from the Pyodide CDN
+  // without being blocked by CORS.
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Cross-Origin-Opener-Policy',
+            value: 'same-origin',
+          },
+          {
+            key: 'Cross-Origin-Embedder-Policy',
+            value: 'require-corp',
+          },
+        ],
+      },
+    ];
+  },
   experimental: {
     esmExternals: 'loose'
   },
@@ -15,13 +35,6 @@ const nextConfig = {
         pathname: '/images/**',
       },
     ],
-  },
-  webpack: (config) => {
-    config.module = {
-      ...config.module,
-      exprContextCritical: false,
-    };
-    return config;
   },
   transpilePackages: [
     'sanity',

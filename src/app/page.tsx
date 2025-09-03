@@ -36,7 +36,7 @@ const projects = [
     description: "An implementation of a digital watermarking algorithm in Python to embed and detect fragile watermarks in digital images.",
     tags: ["Python"],
     tagColors: ["bg-tagColors-python"],
-    link: "#"
+    link: "/projects/digital-watermarking"
   },
   {
     title: "Healthcare Management System",

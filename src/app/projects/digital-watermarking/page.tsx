@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Modal from '@/components/Modal';
+import ImageViewer from '@/components/ImageViewer';
 
 // Helper function to convert a Base64 string back to a File object
 const dataURLtoFile = (dataurl: string, filename: string): File => {
@@ -63,6 +64,7 @@ export default function WatermarkingPage() {
   const [statusMessage, setStatusMessage] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [viewerImageUrl, setViewerImageUrl] = useState<string | null>(null);
 
   // --- EVENT HANDLERS ---
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, type: 'host' | 'watermark') => {
@@ -137,8 +139,19 @@ export default function WatermarkingPage() {
     }
   };
 
+  const openImageViewer = (imageUrl: string) => {
+    setViewerImageUrl(imageUrl);
+  };
+
   return (
     <div>
+      {/* --- Image Viewer Component --- */}
+      <ImageViewer 
+        isOpen={!!viewerImageUrl} 
+        onClose={() => setViewerImageUrl(null)} 
+        imageUrl={viewerImageUrl || ''} 
+      />
+
       {/* --- Explanation Modal Component --- */}
       <Modal title="About This Demo" isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <div className="space-y-4 text-on-background prose prose-invert prose-lg max-w-none">
@@ -161,6 +174,23 @@ export default function WatermarkingPage() {
            <p>
               LSB watermarking is a high-capacity method for proving ownership or detecting tampering in digital media. However, it is <strong>not robust</strong> against transformations like JPEG compression, resizing, or heavy filtering. It is best suited for workflows where you need to verify the integrity of a lossless image like a PNG.
             </p>
+
+            {/* --- Diagram Buttons --- */}
+          <div className="pt-4 border-t border-gray-700">
+            <h3 className="text-accent">Algorithm Flow Diagrams</h3>
+            <p>Click to view a detailed diagram of each process in a zoomable, pannable viewer.</p>
+            <div className="flex flex-col sm:flex-row gap-4 mt-4">
+              <button onClick={() => openImageViewer('/diagrams/embedding-pipeline.png')} className="flex-1 bg-primary/10 text-primary font-semibold py-2 px-4 rounded-lg hover:bg-primary/20 transition-colors">
+                Embedding Pipeline
+              </button>
+              <button onClick={() => openImageViewer('/diagrams/extraction-pipeline.png')} className="flex-1 bg-primary/10 text-primary font-semibold py-2 px-4 rounded-lg hover:bg-primary/20 transition-colors">
+                Extraction & Majority Vote
+              </button>
+              <button onClick={() => openImageViewer('/diagrams/tamper-analysis.png')} className="flex-1 bg-primary/10 text-primary font-semibold py-2 px-4 rounded-lg hover:bg-primary/20 transition-colors">
+                Tamper Analysis
+              </button>
+            </div>
+          </div>
         </div>
       </Modal>
 

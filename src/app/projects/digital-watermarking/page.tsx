@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Modal from '@/components/Modal';
 import ImageViewer from '@/components/ImageViewer';
+import GitHubLink from '@/components/GitHubLink';
 
 // Helper function to convert a Base64 string back to a File object
 const dataURLtoFile = (dataurl: string, filename: string): File => {
@@ -157,7 +158,7 @@ export default function WatermarkingPage() {
         <div className="space-y-4 text-on-background prose prose-invert prose-lg max-w-none">
           <h3 className="text-accent">How It Works</h3>
           <p>
-            This demo is a live implementation of a block-based, LSB (Least Significant Bit) digital watermarking algorithm. Your actual Python code from the <code>watermarking.py</code> script is executed on the server via a Next.js API Route.
+            This demo is a live implementation of a block-based, LSB (Least Significant Bit) digital watermarking algorithm. Actual Python code from the <code>watermarking.py</code> script is executed on the server via a Next.js API Route.
           </p>
           <ul>
             <li>When you click "Embed," the browser securely uploads the host and watermark images to the server.</li>
@@ -194,21 +195,29 @@ export default function WatermarkingPage() {
         </div>
       </Modal>
 
-      {/* --- Page Header with Explanation Button --- */}
-      <div className="mb-8 text-center relative">
-        <div className="absolute top-0 left-0">
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className="bg-primary/10 text-primary font-semibold py-2 px-4 rounded-lg hover:bg-primary/20 transition-colors"
-          >
-            Explanation
-          </button>
-        </div>
-        <h1 className="text-4xl font-bold text-primary">Live Digital Watermarking Demo</h1>
-        <p className="text-on-background mt-2 max-w-3xl mx-auto">
-          An interactive demo of a block-based, LSB watermarking algorithm, running Python script on the server.
-        </p>
-      </div>
+      {/* --- Page Header with Explanation and GitHub Buttons --- */}
+<div className="mb-8 relative pt-12 md:pt-0">
+  {/* Container for the buttons */}
+  <div className="absolute top-0 left-0 right-0 flex justify-between items-start">
+    {/* Left Button */}
+    <button 
+      onClick={() => setIsModalOpen(true)}
+      className="bg-primary/10 text-primary font-semibold py-2 px-4 rounded-lg hover:bg-primary/20 transition-colors"
+    >
+      Explanation
+    </button>
+    {/* Right Button */}
+    <GitHubLink href="https://github.com/devrugu/digital-watermarking" />
+  </div>
+
+  {/* Centered Text Content */}
+  <div className="text-center">
+    <h1 className="text-4xl font-bold text-primary">Live Digital Watermarking Demo</h1>
+    <p className="text-on-background mt-2 max-w-3xl mx-auto">
+      An interactive demo of a block-based, LSB watermarking algorithm, running your Python script on the server.
+    </p>
+  </div>
+</div>
       
       {isLoading && (
         <div className="flex items-center justify-center my-4">

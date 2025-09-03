@@ -5,6 +5,7 @@ import { RegexEngine } from '@/lib/regex-engine';
 import { useDebounce } from 'use-debounce';
 import { motion, AnimatePresence } from 'framer-motion';
 import HighlightedText from '@/components/HighlightedText';
+import GitHubLink from '@/components/GitHubLink';
 
 type Match = {
   match: string;
@@ -76,12 +77,15 @@ export default function RegexEnginePage() {
   return (
     <div>
       {/* Page Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-primary">Live Regex Engine Demo</h1>
-        <p className="text-on-background mt-2">
-          A from-scratch Regular Expression Engine implemented with Thompson's Construction (NFA) and Subset Construction (DFA), running directly in your browser.
-        </p>
-      </div>
+      <div className="flex items-start justify-between mb-8">
+  <div>
+    <h1 className="text-4xl font-bold text-primary">Live Regex Engine Demo</h1>
+    <p className="text-on-background mt-2 max-w-2xl">
+      A from-scratch Regular Expression Engine implemented with Thompson's Construction (NFA) and Subset Construction (DFA), running directly in your browser.
+    </p>
+  </div>
+  <GitHubLink href="https://github.com/devrugu/portfolio" />
+</div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Left Column: Inputs and Controls */}

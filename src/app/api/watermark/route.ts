@@ -47,6 +47,7 @@ async function handleEmbed(formData: FormData) {
   const hostFile = formData.get('hostImage') as File;
   const wmFile = formData.get('watermarkImage') as File;
   const key = formData.get('key') as string;
+  const channels = formData.get('channels') as string;
   
   if (!hostFile || !wmFile || !key) {
     return NextResponse.json({ error: 'Missing required fields for embedding' }, { status: 400 });
@@ -62,7 +63,7 @@ async function handleEmbed(formData: FormData) {
     await fs.writeFile(hostPath, Buffer.from(await hostFile.arrayBuffer()));
     await fs.writeFile(wmPath, Buffer.from(await wmFile.arrayBuffer()));
     
-    const args = ['embed', '--host', hostPath, '--wm', wmPath, '--out', outPath, '--key', key, '--channels', 'BGR'];
+    const args = ['embed', '--host', hostPath, '--wm', wmPath, '--out', outPath, '--key', key, '--channels', channels || 'BGR'];
     await runPythonScript(args);
     
     const stegoImageBuffer = await fs.readFile(outPath);
@@ -81,6 +82,7 @@ async function handleEmbed(formData: FormData) {
 async function handleExtract(formData: FormData) {
   const stegoFile = formData.get('stegoImage') as File;
   const key = formData.get('key') as string;
+  const channels = formData.get('channels') as string;
 
   if (!stegoFile || !key) {
     return NextResponse.json({ error: 'Missing required fields for extraction' }, { status: 400 });
@@ -94,7 +96,7 @@ async function handleExtract(formData: FormData) {
 
     await fs.writeFile(stegoPath, Buffer.from(await stegoFile.arrayBuffer()));
 
-    const args = ['extract', '--stego', stegoPath, '--out', outPath, '--key', key, '--channels', 'BGR'];
+    const args = ['extract', '--stego', stegoPath, '--out', outPath, '--key', key, '--channels', channels || 'BGR']; 
     await runPythonScript(args);
     
     const extractedImageBuffer = await fs.readFile(outPath);

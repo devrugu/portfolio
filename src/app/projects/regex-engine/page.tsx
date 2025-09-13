@@ -23,7 +23,7 @@ export default function RegexEnginePage() {
   // Updated state for flags
   const [flags, setFlags] = useState({
     caseInsensitive: false,
-    wholeWord: true, // Let's make this the default for your example
+    wholeWord: true,
   });
 
   // --- DEBOUNCING ---
@@ -84,7 +84,7 @@ export default function RegexEnginePage() {
       A from-scratch Regular Expression Engine implemented with Thompson's Construction (NFA) and Subset Construction (DFA), running directly in your browser.
     </p>
   </div>
-  <GitHubLink href="https://github.com/devrugu/portfolio" />
+  <GitHubLink href="https://github.com/devrugu/Regular-Expression-Engine" />
 </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

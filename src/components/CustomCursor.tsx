@@ -60,7 +60,7 @@ export default function CustomCursor() {
       <motion.div
         variants={cursorVariants}
         animate={isHoveringLink ? 'hovering' : 'default'}
-        className="pointer-events-none fixed top-0 left-0 z-50 rounded-full"
+        className="pointer-events-none fixed top-0 left-0 z-[9999] rounded-full"
         style={{ 
           translateX: mousePosition.x - 16, // Center the ring
           translateY: mousePosition.y - 16,
@@ -70,7 +70,7 @@ export default function CustomCursor() {
       <motion.div
         variants={dotVariants}
         animate={isHoveringLink ? 'hovering' : 'default'}
-        className="pointer-events-none fixed top-0 left-0 z-50 h-2 w-2 rounded-full bg-accent"
+        className="pointer-events-none fixed top-0 left-0 z-[9999] h-2 w-2 rounded-full bg-accent"
         style={{ 
           translateX: mousePosition.x - 4, // Center the dot
           translateY: mousePosition.y - 4,

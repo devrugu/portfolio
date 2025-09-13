@@ -23,10 +23,10 @@ export default function RootLayout({
     <html lang="en">
       {/* Add the GA component here */}
       <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID!} />
-      <body className={`${inter.className} bg-background text-on-background`}>
+      <body className={`${inter.className} bg-background text-on-background hide-cursor`}>
         <CustomCursor />
         <MouseSpotlight />
-        <div className="flex flex-col min-h-screen hide-cursor">
+        <div className="flex flex-col min-h-screen">
           <Header />
           <div className="flex-grow container mx-auto max-w-5xl px-4 py-8">
             {children}

@@ -5,3 +5,10 @@
 .hide-cursor {
   cursor: none;
 }
+/* This rule hides the cursor on all interactive elements within the main container */
+.hide-cursor a,
+.hide-cursor button,
+.hide-cursor input[type="checkbox"],
+.hide-cursor label {
+  cursor: none;
+}

@@ -4,52 +4,37 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
+const navLinks = [
+  { name: "Resume", href: "/resume" },
+  { name: "Blog", href: "/blog" },
+  { name: "Contact", href: "/contact" },
+];
+
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
-  // --- NEW: State to track if the mouse is hovering over the header ---
   const [isHovered, setIsHovered] = useState(false);
+  // --- NEW: State to track which link is being hovered ---
+  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
+    const handleScroll = () => { setIsScrolled(window.scrollY > 10); };
     window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => { window.removeEventListener('scroll', handleScroll); };
   }, []);
 
-  // --- UPDATED: Animation variants with a new 'hovered' state ---
   const headerVariants = {
-    top: {
-      backgroundColor: 'rgba(18, 18, 18, 1)', // Solid
-      height: '80px',
-      backdropFilter: 'blur(0px)',
-    },
-    // The transparent state when scrolled and NOT hovered
-    scrolled: {
-      backgroundColor: 'rgba(18, 18, 18, 0.3)', // Much more transparent (30% opaque)
-      height: '64px',
-      backdropFilter: 'blur(12px)', // Slightly more blur for readability
-    },
-    // The state when scrolled AND hovered
-    hovered: {
-      backgroundColor: 'rgba(18, 18, 18, 1)', // Solid
-      height: '64px',
-      backdropFilter: 'blur(12px)',
-    },
+    top: { backgroundColor: 'rgba(18, 18, 18, 1)', height: '80px', backdropFilter: 'blur(0px)' },
+    scrolled: { backgroundColor: 'rgba(18, 18, 18, 0.3)', height: '64px', backdropFilter: 'blur(12px)' },
+    hovered: { backgroundColor: 'rgba(18, 18, 18, 1)', height: '64px', backdropFilter: 'blur(12px)' },
   };
 
-  // The inner container only needs to know about scrolling for its height
   const containerVariants = {
     top: { height: '80px' },
     scrolled: { height: '64px' },
   };
 
-  // --- NEW: Helper function to determine the current animation state ---
   const getAnimationState = () => {
-    if (!isScrolled) return "top"; // Always solid at the top
-    // If scrolled, the state depends on whether the user is hovering
+    if (!isScrolled) return "top";
     return isHovered ? "hovered" : "scrolled";
   };
 
@@ -58,9 +43,8 @@ export default function Header() {
       className="sticky top-0 z-50 w-full border-b border-gray-700/50"
       variants={headerVariants}
       initial="top"
-      animate={getAnimationState()} // Use the helper function here
+      animate={getAnimationState()}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
-      // --- NEW: Event handlers to track mouse enter and leave ---
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -75,10 +59,32 @@ export default function Header() {
           Uğurcan Yılmaz
         </Link>
         <nav>
-          <ul className="flex items-center space-x-6 text-sm font-medium text-on-background">
-            <li><Link href="/resume" className="hover:text-accent transition-colors">Resume</Link></li>
-            <li><Link href="/blog" className="hover:text-accent transition-colors">Blog</Link></li>
-            <li><Link href="/contact" className="hover:text-accent transition-colors">Contact</Link></li>
+          {/* --- NEW: Updated Navigation List --- */}
+          <ul 
+            className="flex items-center space-x-6 text-sm font-medium text-on-background"
+            onMouseLeave={() => setHoveredLink(null)} // Clear hover when mouse leaves the whole list
+          >
+            {navLinks.map((link) => (
+              <li 
+                key={link.name} 
+                className="relative"
+                onMouseEnter={() => setHoveredLink(link.href)} // Set the hovered link
+              >
+                <Link href={link.href} className="transition-colors hover:text-primary">
+                  {link.name}
+                </Link>
+                {/* The Animated Underline */}
+                {hoveredLink === link.href && (
+                  <motion.div
+                    className="absolute bottom-[-4px] left-0 w-full h-[2px] bg-accent"
+                    layoutId="underline" // This is the magic!
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  />
+                )}
+              </li>
+            ))}
           </ul>
         </nav>
       </motion.div>

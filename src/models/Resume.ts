@@ -23,6 +23,7 @@ const EducationSchema = new Schema({
 const SkillSchema = new Schema({
   name: { type: String, required: true },
   category: { type: String, required: true },
+  proficiency: { type: Number, required: true, min: 0, max: 100 }, // 0-100 scale
 });
 
 // This is the main schema that enforces the structure in MongoDB

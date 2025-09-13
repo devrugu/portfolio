@@ -31,6 +31,7 @@ export interface Skill {
   _id?: string;
   name: string;
   category: 'Language' | 'Framework' | 'Tool' | 'Database' | 'Other';
+  proficiency: number; // 0-100 scale
 }
 
 // This is the main interface for the entire Resume document

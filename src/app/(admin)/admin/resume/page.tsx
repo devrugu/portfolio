@@ -10,7 +10,6 @@ export default function ResumeEditorPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  // Fetch function remains the same
   const fetchResumeData = async () => {
     try {
       setLoading(true);
@@ -29,17 +28,10 @@ export default function ResumeEditorPage() {
     fetchResumeData();
   }, []);
 
-  // --- NEW: Handle form input changes ---
   const handlePersonalInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (!resumeData) return;
     const { name, value } = e.target;
-    setResumeData({
-      ...resumeData,
-      personalInfo: {
-        ...resumeData.personalInfo,
-        [name]: value,
-      },
-    });
+    setResumeData({ ...resumeData, personalInfo: { ...resumeData.personalInfo, [name]: value } });
   };
 
   const handleSave = async () => {
@@ -60,47 +52,30 @@ export default function ResumeEditorPage() {
     }
   };
 
-  // Handles changes to a specific field within a specific experience item
   const handleExperienceChange = (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (!resumeData) return;
     const { name, value } = e.target;
     const updatedExperience = [...resumeData.experience];
-    
-    // If the field is 'description', we need to split it by newline to save it as an array
     if (name === 'description') {
       updatedExperience[index] = { ...updatedExperience[index], [name]: value.split('\n') };
     } else {
       updatedExperience[index] = { ...updatedExperience[index], [name]: value };
     }
-
     setResumeData({ ...resumeData, experience: updatedExperience });
   };
 
-  // Adds a new, blank experience item to the array
   const handleAddExperience = () => {
     if (!resumeData) return;
-    const newExperience: Experience = {
-      jobTitle: "",
-      company: "",
-      location: "",
-      startDate: "",
-      endDate: "",
-      description: [],
-    };
-    setResumeData({
-      ...resumeData,
-      experience: [...resumeData.experience, newExperience],
-    });
+    const newExperience: Experience = { jobTitle: "", company: "", location: "", startDate: "", endDate: "", description: [] };
+    setResumeData({ ...resumeData, experience: [...resumeData.experience, newExperience] });
   };
 
-  // Removes an experience item from the array at a specific index
   const handleRemoveExperience = (index: number) => {
     if (!resumeData) return;
     const updatedExperience = resumeData.experience.filter((_, i) => i !== index);
     setResumeData({ ...resumeData, experience: updatedExperience });
   };
 
-  // --- Handlers for Education ---
   const handleEducationChange = (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (!resumeData) return;
     const { name, value } = e.target;
@@ -121,18 +96,21 @@ export default function ResumeEditorPage() {
     setResumeData({ ...resumeData, education: updatedEducation });
   };
 
-  // --- Handlers for Skills ---
+  // --- THE FINAL, CORRECTED VERSION of handleSkillChange ---
   const handleSkillChange = (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     if (!resumeData) return;
     const { name, value } = e.target;
     const updatedSkills = [...resumeData.skills];
-    updatedSkills[index] = { ...updatedSkills[index], [name]: value as any };
+
+    const newValue = name === 'proficiency' ? parseInt(value, 10) : value;
+    
+    updatedSkills[index] = { ...updatedSkills[index], [name]: newValue as any };
     setResumeData({ ...resumeData, skills: updatedSkills });
   };
 
   const handleAddSkill = () => {
     if (!resumeData) return;
-    const newSkill: Skill = { name: "", category: "Language" };
+    const newSkill: Skill = { name: "", category: "Language", proficiency: 80 };
     setResumeData({ ...resumeData, skills: [...resumeData.skills, newSkill] });
   };
 
@@ -142,91 +120,61 @@ export default function ResumeEditorPage() {
     setResumeData({ ...resumeData, skills: updatedSkills });
   };
 
-  // Loading and error states remain the same
   if (loading) return <div>Loading resume editor...</div>;
   if (error) return <div className="text-red-500">Error: {error}</div>;
   if (!resumeData) return <div>No resume data found.</div>;
 
-  // --- UPDATED: The main return with the form ---
   return (
     <div>
       <div className="flex items-center justify-between mb-8 sticky top-4 z-10 bg-gray-900 py-4">
         <h1 className="text-4xl font-bold text-primary">Resume Editor</h1>
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="bg-accent text-on-primary font-bold py-2 px-4 rounded-lg hover:bg-accent-hover transition-colors disabled:bg-gray-600"
-        >
+        <button onClick={handleSave} disabled={saving} className="bg-accent text-on-primary font-bold py-2 px-4 rounded-lg hover:bg-accent-hover transition-colors disabled:bg-gray-600">
           {saving ? "Saving..." : "Save Changes"}
         </button>
       </div>
 
-      {/* Personal Info Section */}
-      <section className="bg-gray-900/50 p-6 rounded-lg border border-gray-700/50">
-        <h2 className="text-2xl font-semibold text-accent mb-4">Personal Information</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormInput label="Full Name" name="name" value={resumeData.personalInfo.name} onChange={handlePersonalInfoChange} />
-          <FormInput label="Email" name="email" type="email" value={resumeData.personalInfo.email} onChange={handlePersonalInfoChange} />
-          <FormInput label="Phone Number" name="phone" type="tel" value={resumeData.personalInfo.phone} onChange={handlePersonalInfoChange} />
-          <FormInput label="Website/Portfolio" name="website" value={resumeData.personalInfo.website} onChange={handlePersonalInfoChange} />
-          <div className="md:col-span-2">
-            <FormInput label="Location" name="location" value={resumeData.personalInfo.location} onChange={handlePersonalInfoChange} />
+      <div className="space-y-8">
+        {/* Personal Info Section */}
+        <section className="bg-gray-900/50 p-6 rounded-lg border border-gray-700/50">
+          <h2 className="text-2xl font-semibold text-accent mb-4">Personal Information</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormInput label="Full Name" name="name" value={resumeData.personalInfo.name} onChange={handlePersonalInfoChange} />
+            <FormInput label="Email" name="email" type="email" value={resumeData.personalInfo.email} onChange={handlePersonalInfoChange} />
+            <FormInput label="Phone Number" name="phone" type="tel" value={resumeData.personalInfo.phone} onChange={handlePersonalInfoChange} />
+            <FormInput label="Website/Portfolio" name="website" value={resumeData.personalInfo.website} onChange={handlePersonalInfoChange} />
+            <div className="md:col-span-2"><FormInput label="Location" name="location" value={resumeData.personalInfo.location} onChange={handlePersonalInfoChange} /></div>
+            <div className="md:col-span-2"><FormInput label="Summary" name="summary" as="textarea" value={resumeData.personalInfo.summary} onChange={handlePersonalInfoChange} /></div>
           </div>
-          <div className="md:col-span-2">
-            <FormInput label="Summary" name="summary" as="textarea" value={resumeData.personalInfo.summary} onChange={handlePersonalInfoChange} />
-          </div>
-        </div>
-      </section>
+        </section>
 
-      {/* --- Experience Section --- */}
-      <section className="bg-gray-900/50 p-6 rounded-lg border border-gray-700/50">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-semibold text-accent">Work Experience</h2>
-          <button
-            onClick={handleAddExperience}
-            className="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors"
-          >
-            + Add Experience
-          </button>
-        </div>
-        <div className="space-y-6">
-          {resumeData.experience.map((exp, index) => (
-            <div key={index} className="p-4 bg-gray-800/50 rounded-lg border border-gray-700/50 relative">
-              <button
-                onClick={() => handleRemoveExperience(index)}
-                className="absolute top-2 right-2 text-red-500 hover:text-red-400 font-bold text-xl"
-                title="Remove Experience"
-              >
-                &times;
-              </button>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormInput label="Job Title" name="jobTitle" value={exp.jobTitle} onChange={(e) => handleExperienceChange(index, e)} />
-                <FormInput label="Company" name="company" value={exp.company} onChange={(e) => handleExperienceChange(index, e)} />
-                <FormInput label="Location" name="location" value={exp.location} onChange={(e) => handleExperienceChange(index, e)} />
-                <FormInput label="Start Date" name="startDate" value={exp.startDate} onChange={(e) => handleExperienceChange(index, e)} />
-                <FormInput label="End Date" name="endDate" value={exp.endDate} onChange={(e) => handleExperienceChange(index, e)} />
-                <div className="md:col-span-2">
-                  <FormInput
-                    label="Description (one point per line)"
-                    name="description"
-                    as="textarea"
-                    value={exp.description.join('\n')}
-                    onChange={(e) => handleExperienceChange(index, e)}
-                  />
+        {/* Experience Section */}
+        <section className="bg-gray-900/50 p-6 rounded-lg border border-gray-700/50">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-semibold text-accent">Work Experience</h2>
+            <button onClick={handleAddExperience} className="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">+ Add Experience</button>
+          </div>
+          <div className="space-y-6">
+            {resumeData.experience.map((exp, index) => (
+              <div key={index} className="p-4 bg-gray-800/50 rounded-lg border border-gray-700/50 relative">
+                <button onClick={() => handleRemoveExperience(index)} className="absolute top-2 right-2 text-red-500 hover:text-red-400 font-bold text-xl" title="Remove Experience">&times;</button>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormInput label="Job Title" name="jobTitle" value={exp.jobTitle} onChange={(e) => handleExperienceChange(index, e)} />
+                  <FormInput label="Company" name="company" value={exp.company} onChange={(e) => handleExperienceChange(index, e)} />
+                  <FormInput label="Location" name="location" value={exp.location} onChange={(e) => handleExperienceChange(index, e)} />
+                  <FormInput label="Start Date" name="startDate" value={exp.startDate} onChange={(e) => handleExperienceChange(index, e)} />
+                  <FormInput label="End Date" name="endDate" value={exp.endDate} onChange={(e) => handleExperienceChange(index, e)} />
+                  <div className="md:col-span-2"><FormInput label="Description (one point per line)" name="description" as="textarea" value={exp.description.join('\n')} onChange={(e) => handleExperienceChange(index, e)} /></div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
 
-      {/* --- NEW: Education Section --- */}
+        {/* Education Section */}
         <section className="bg-gray-900/50 p-6 rounded-lg border border-gray-700/50">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-semibold text-accent">Education</h2>
-            <button onClick={handleAddEducation} className="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
-              + Add Education
-            </button>
+            <button onClick={handleAddEducation} className="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">+ Add Education</button>
           </div>
           <div className="space-y-6">
             {resumeData.education.map((edu, index) => (
@@ -243,19 +191,18 @@ export default function ResumeEditorPage() {
           </div>
         </section>
 
-        {/* --- NEW: Skills Section --- */}
+        {/* Skills Section */}
         <section className="bg-gray-900/50 p-6 rounded-lg border border-gray-700/50">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-semibold text-accent">Skills</h2>
-            <button onClick={handleAddSkill} className="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
-              + Add Skill
-            </button>
+            <button onClick={handleAddSkill} className="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">+ Add Skill</button>
           </div>
-          <div className="flex flex-wrap gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {resumeData.skills.map((skill, index) => (
-              <div key={index} className="p-4 bg-gray-800/50 rounded-lg border border-gray-700/50 flex items-center space-x-2 flex-grow md:flex-grow-0 md:min-w-[300px]">
-                <div className="flex-grow">
+              <div key={index} className="p-4 bg-gray-800/50 rounded-lg border border-gray-700/50 space-y-3">
+                <div className="flex items-center justify-between">
                   <FormInput label="Skill Name" name="name" value={skill.name} onChange={(e) => handleSkillChange(index, e)} />
+                  <button onClick={() => handleRemoveSkill(index)} className="text-red-500 hover:text-red-400 font-bold text-2xl mt-6 ml-4" title="Remove Skill">&times;</button>
                 </div>
                 <div>
                   <label htmlFor={`skill-category-${index}`} className="block text-on-background mb-1">Category</label>
@@ -273,13 +220,27 @@ export default function ResumeEditorPage() {
                     <option>Other</option>
                   </select>
                 </div>
-                <button onClick={() => handleRemoveSkill(index)} className="text-red-500 hover:text-red-400 font-bold text-2xl self-end mb-1">&times;</button>
+                <div>
+                  <label htmlFor={`skill-proficiency-${index}`} className="block text-on-background mb-1">
+                    Proficiency: <span className="font-bold text-accent">{skill.proficiency || 80}%</span>
+                  </label>
+                  <input
+                    id={`skill-proficiency-${index}`}
+                    type="range"
+                    name="proficiency"
+                    min="0"
+                    max="100"
+                    step="5"
+                    value={skill.proficiency || 80}
+                    onChange={(e) => handleSkillChange(index, e)}
+                    className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-accent"
+                  />
+                </div>
               </div>
             ))}
           </div>
         </section>
-
-      {/* Education, and Skills sections will go here later */}
+      </div>
     </div>
   );
 }

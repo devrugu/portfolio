@@ -5,6 +5,7 @@ import Image from "next/image";
 import { client } from "@/sanity/client";
 import { urlFor } from "@/sanity/image";
 import ResumeDownloadButton from "@/components/ResumeDownloadButton";
+import SkillBar from "@/components/SkillBar";
 
 // This function fetches the resume data from the database.
 async function getResumeData() {
@@ -116,15 +117,20 @@ export default async function ResumePage() {
 
       {/* Skills Section */}
       <section>
-        <h2 className="text-3xl font-semibold text-accent mb-4 border-b-2 border-gray-700 pb-2">Skills</h2>
-        <div className="flex flex-wrap gap-2">
-          {skills.map((skill) => (
-            <span key={skill._id} className="bg-gray-700/50 text-primary text-sm font-medium px-3 py-1 rounded-full">
-              {skill.name}
-            </span>
-          ))}
-        </div>
-      </section>
+  <h2 className="text-3xl font-semibold text-accent mb-6 border-b-2 border-gray-700 pb-2">Skills</h2>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+    {skills
+      // Optional: Sort skills by proficiency, descending
+      .sort((a, b) => b.proficiency - a.proficiency)
+      .map((skill) => (
+        <SkillBar
+          key={skill._id}
+          skill={skill.name}
+          proficiency={skill.proficiency}
+        />
+    ))}
+  </div>
+</section>
       </div>
     </div>
   );

@@ -7,6 +7,8 @@ import { urlFor } from "@/sanity/image";
 import ResumeDownloadButton from "@/components/ResumeDownloadButton";
 import SkillBar from "@/components/SkillBar";
 
+export const revalidate = 60; // Re-fetch data at most once every 60 seconds
+
 // This function fetches the resume data from the database.
 async function getResumeData() {
   // Connect to MongoDB

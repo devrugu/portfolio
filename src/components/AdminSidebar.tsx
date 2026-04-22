@@ -7,8 +7,9 @@ import SignOutButton from "./SignOutButton";
 const adminNavLinks = [
   { name: "Dashboard", href: "/admin" },
   { name: "Blog Management", href: "/admin/blog" },
-  { name: "Resume Editor", href: "/admin/resume" }, // For a future task
-  { name: "Analytics", href: "/admin/analytics" },   // For a future task
+  { name: "Resume Editor", href: "/admin/resume" },
+  { name: "Analytics", href: "/admin/analytics" },
+  { name: "Phone Viewers", href: "/admin/phone-viewers" },
 ];
 
 export default function AdminSidebar() {
@@ -26,11 +27,10 @@ export default function AdminSidebar() {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className={`block px-4 py-2 rounded-lg transition-colors ${
-                      isActive
+                    className={`block px-4 py-2 rounded-lg transition-colors ${isActive
                         ? "bg-accent text-on-primary"
                         : "text-on-background hover:bg-gray-800/50"
-                    }`}
+                      }`}
                   >
                     {link.name}
                   </Link>

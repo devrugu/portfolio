@@ -24,7 +24,7 @@ const projects = [
       "Developed Audio Signal Processor and Audio Manager software, and continued development of signal generator software for active/passive sonar analysis.",
     tags: ["Qt", "C++17", "Matlab"],
     tagColors: ["bg-green-500", "bg-tagColors-cpp", "bg-blue-500"],
-    link: null, // Classified / NDA
+    link: "/projects/sonar-system",
     nda: true,
   },
   {
@@ -33,7 +33,7 @@ const projects = [
       "A low-level implementation of a Finite Impulse Response (FIR) digital filter in the C programming language, focusing on performance and accuracy.",
     tags: ["C"],
     tagColors: ["bg-tagColors-cpp"],
-    link: "https://github.com/devrugu/FIR-filter-implementation",
+    link: "/projects/fir-filter",
     nda: false,
   },
   {
@@ -51,7 +51,7 @@ const projects = [
       "A full-stack web application for managing healthcare records and appointments, built with a classic LAMP stack.",
     tags: ["PHP", "HTML/CSS", "MySQL"],
     tagColors: ["bg-tagColors-php", "bg-orange-500", "bg-tagColors-mysql"],
-    link: "https://github.com/devrugu/Database-Management-System",
+    link: "/projects/healthcare-system",
     nda: false,
   },
   {
@@ -60,7 +60,7 @@ const projects = [
       "A web-based platform for managing event registrations and generating digital certificates for attendees.",
     tags: ["PHP", "HTML/CSS", "MySQL"],
     tagColors: ["bg-tagColors-php", "bg-orange-500", "bg-tagColors-mysql"],
-    link: "https://github.com/devrugu/certificate-me",
+    link: "/projects/event-certificate",
     nda: false,
   },
   {

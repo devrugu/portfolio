@@ -7,8 +7,15 @@ export default function CustomCursor() {
   const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 });
   const [isHovering, setIsHovering] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
 
   useEffect(() => {
+    // Disable on touch devices
+    setIsTouch(window.matchMedia('(hover: none) and (pointer: coarse)').matches);
+  }, []);
+
+  useEffect(() => {
+    if (isTouch) return;
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
       if (!isVisible) setIsVisible(true);
@@ -30,6 +37,8 @@ export default function CustomCursor() {
       document.documentElement.removeEventListener('mouseenter', handleMouseEnter);
     };
   }, [isVisible]);
+
+  if (isTouch) return null;
 
   return (
     <motion.div

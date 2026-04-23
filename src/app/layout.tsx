@@ -59,7 +59,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID!} />
-      <body className={`${inter.className} bg-background text-on-background hide-cursor`}>
+      <body className={`${inter.className} bg-background text-on-background hide-cursor-desktop`}>
         <CustomCursor />
         <MouseSpotlight />
         <div className="flex flex-col min-h-screen">

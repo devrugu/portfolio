@@ -5,8 +5,14 @@ import { motion } from 'framer-motion';
 
 export default function MouseSpotlight() {
   const [mousePosition, setMousePosition] = useState({ x: -200, y: -200 });
+  const [isTouch, setIsTouch] = useState(false);
 
   useEffect(() => {
+    setIsTouch(window.matchMedia('(hover: none) and (pointer: coarse)').matches);
+  }, []);
+
+  useEffect(() => {
+    if (isTouch) return;
     const handleMouseMove = (event: MouseEvent) => {
       setMousePosition({ x: event.clientX, y: event.clientY });
     };
@@ -18,7 +24,9 @@ export default function MouseSpotlight() {
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, []); // Empty dependency array means this effect runs only once
+  }, [isTouch]);
+
+  if (isTouch) return null;
 
   return (
     <motion.div

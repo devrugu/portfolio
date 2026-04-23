@@ -2,94 +2,140 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
-  { name: "About", href: "/about" },
+  { name: "About",    href: "/about"     },
   { name: "Projects", href: "/#projects" },
-  { name: "Resume", href: "/resume" },
-  { name: "Blog", href: "/blog" },
-  { name: "Contact", href: "/contact" },
+  { name: "Resume",   href: "/resume"    },
+  { name: "Blog",     href: "/blog"      },
+  { name: "Contact",  href: "/contact"   },
 ];
 
 export default function Header() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-  // --- NEW: State to track which link is being hovered ---
-  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+  const [isScrolled,   setIsScrolled]   = useState(false);
+  const [isHovered,    setIsHovered]    = useState(false);
+  const [hoveredLink,  setHoveredLink]  = useState<string | null>(null);
+  const [menuOpen,     setMenuOpen]     = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => { setIsScrolled(window.scrollY > 10); };
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handleScroll);
-    return () => { window.removeEventListener('scroll', handleScroll); };
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Close menu on route change / resize
+  useEffect(() => {
+    const close = () => setMenuOpen(false);
+    window.addEventListener('resize', close);
+    return () => window.removeEventListener('resize', close);
   }, []);
 
   const headerVariants = {
-    top: { backgroundColor: 'rgba(18, 18, 18, 1)', height: '80px', backdropFilter: 'blur(0px)' },
-    scrolled: { backgroundColor: 'rgba(18, 18, 18, 0.3)', height: '64px', backdropFilter: 'blur(12px)' },
-    hovered: { backgroundColor: 'rgba(18, 18, 18, 1)', height: '64px', backdropFilter: 'blur(12px)' },
+    top:      { backgroundColor: 'rgba(18,18,18,1)',   height: '80px', backdropFilter: 'blur(0px)'  },
+    scrolled: { backgroundColor: 'rgba(18,18,18,0.3)', height: '64px', backdropFilter: 'blur(12px)' },
+    hovered:  { backgroundColor: 'rgba(18,18,18,1)',   height: '64px', backdropFilter: 'blur(12px)' },
   };
 
-  const containerVariants = {
-    top: { height: '80px' },
-    scrolled: { height: '64px' },
-  };
-
-  const getAnimationState = () => {
-    if (!isScrolled) return "top";
-    return isHovered ? "hovered" : "scrolled";
+  const getState = () => {
+    if (!isScrolled) return 'top';
+    return isHovered ? 'hovered' : 'scrolled';
   };
 
   return (
-    <motion.header
-      className="sticky top-0 z-50 w-full border-b border-gray-700/50"
-      variants={headerVariants}
-      initial="top"
-      animate={getAnimationState()}
-      transition={{ duration: 0.3, ease: 'easeInOut' }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <motion.div
-        className="container mx-auto flex max-w-5xl items-center justify-between px-4"
-        variants={containerVariants}
+    <>
+      <motion.header
+        className="sticky top-0 z-50 w-full border-b border-gray-700/50"
+        variants={headerVariants}
         initial="top"
-        animate={isScrolled ? "scrolled" : "top"}
+        animate={getState()}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
-        <Link href="/" className="text-xl font-bold text-primary hover:text-accent transition-colors">
-          Uğurcan Yılmaz
-        </Link>
-        <nav>
-          {/* --- NEW: Updated Navigation List --- */}
-          <ul 
-            className="flex items-center space-x-6 text-sm font-medium text-on-background"
-            onMouseLeave={() => setHoveredLink(null)} // Clear hover when mouse leaves the whole list
+        <div className="container mx-auto flex max-w-5xl items-center justify-between px-4 h-full">
+          <Link href="/" className="text-xl font-bold text-primary hover:text-accent transition-colors">
+            Uğurcan Yılmaz
+          </Link>
+
+          {/* Desktop nav */}
+          <nav className="hidden md:block">
+            <ul
+              className="flex items-center space-x-6 text-sm font-medium text-on-background"
+              onMouseLeave={() => setHoveredLink(null)}
+            >
+              {navLinks.map((link) => (
+                <li key={link.name} className="relative" onMouseEnter={() => setHoveredLink(link.href)}>
+                  <Link href={link.href} className="transition-colors hover:text-primary">
+                    {link.name}
+                  </Link>
+                  {hoveredLink === link.href && (
+                    <motion.div
+                      className="absolute bottom-[-4px] left-0 w-full h-[2px] bg-accent"
+                      layoutId="underline"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                    />
+                  )}
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Hamburger button — mobile only */}
+          <button
+            className="md:hidden flex flex-col justify-center items-center gap-1.5 w-8 h-8"
+            onClick={() => setMenuOpen(o => !o)}
+            aria-label="Toggle menu"
           >
-            {navLinks.map((link) => (
-              <li 
-                key={link.name} 
-                className="relative"
-                onMouseEnter={() => setHoveredLink(link.href)} // Set the hovered link
-              >
-                <Link href={link.href} className="transition-colors hover:text-primary">
-                  {link.name}
-                </Link>
-                {/* The Animated Underline */}
-                {hoveredLink === link.href && (
-                  <motion.div
-                    className="absolute bottom-[-4px] left-0 w-full h-[2px] bg-accent"
-                    layoutId="underline" // This is the magic!
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  />
-                )}
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </motion.div>
-    </motion.header>
+            <motion.span
+              className="block w-6 h-0.5 bg-primary rounded"
+              animate={menuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
+              transition={{ duration: 0.2 }}
+            />
+            <motion.span
+              className="block w-6 h-0.5 bg-primary rounded"
+              animate={menuOpen ? { opacity: 0 } : { opacity: 1 }}
+              transition={{ duration: 0.2 }}
+            />
+            <motion.span
+              className="block w-6 h-0.5 bg-primary rounded"
+              animate={menuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
+              transition={{ duration: 0.2 }}
+            />
+          </button>
+        </div>
+      </motion.header>
+
+      {/* Mobile menu drawer */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden fixed top-[64px] left-0 right-0 z-40 bg-background border-b border-gray-700/50 shadow-xl"
+          >
+            <nav className="container mx-auto max-w-5xl px-4 py-4">
+              <ul className="flex flex-col space-y-1">
+                {navLinks.map((link) => (
+                  <li key={link.name}>
+                    <Link
+                      href={link.href}
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center py-3 px-2 text-base font-medium text-on-background hover:text-accent hover:bg-gray-800/50 rounded-lg transition-colors"
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

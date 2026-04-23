@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
+import chromium from '@sparticuz/chromium';
 import dbConnect from '@/lib/mongodb';
 import ResumeModel from '@/models/Resume';
 import { client } from '@/sanity/client';
@@ -158,9 +159,22 @@ export async function GET(req: NextRequest) {
 </html>`;
 
     // 4. Launch puppeteer, render HTML directly (no URL visit)
+    const isVercel = !!process.env.VERCEL;
+
+    // Local Chrome paths by OS
+    const localChromePaths: Record<string, string> = {
+      win32:  'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+      darwin: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+      linux:  '/usr/bin/google-chrome',
+    };
+    const localExec = localChromePaths[process.platform] || localChromePaths['linux'];
+
     browser = await puppeteer.launch({
+      args: isVercel
+        ? chromium.args
+        : ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+      executablePath: isVercel ? await chromium.executablePath() : localExec,
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
     });
 
     const page = await browser.newPage();

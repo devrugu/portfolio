@@ -5,44 +5,50 @@ import Link from 'next/link';
 
 interface AnimatedCardProps {
   children: React.ReactNode;
-  href: string;
-  // 'index' is used to calculate the animation delay for the stagger effect
+  href?: string;
   index: number;
 }
 
-// Define the animation properties for a single card
 const cardVariants = {
-  hidden: { opacity: 0, y: 20 }, // Start invisible and 20px down
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: {
-      ease: easeInOut,
-      duration: 0.5,
-    },
+    transition: { ease: easeInOut, duration: 0.5 },
   },
 };
 
+const baseClass =
+  "block h-full bg-gray-800/50 p-6 rounded-lg border border-gray-700/50 transition-colors";
+
 export default function AnimatedCard({ children, href, index }: AnimatedCardProps) {
+  const isExternal = href?.startsWith("http");
+
   return (
     <motion.div
       variants={cardVariants}
-      // The magic of staggering: delay each card's animation based on its index
       transition={{ delay: index * 0.15 }}
-      className="block h-full" // Ensure the motion div takes up the full height
+      className="block h-full"
     >
       <motion.div
-        whileHover={{ scale: 1.03, y: -5 }} // Hover effect: scale up and lift
-        transition={{
-          type: 'spring',
-          stiffness: 300,
-          damping: 15,
-        }}
+        whileHover={{ scale: href ? 1.03 : 1, y: href ? -5 : 0 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 15 }}
         className="h-full"
       >
-        <Link href={href} target="_blank" rel="noopener noreferrer" className="block h-full bg-gray-800/50 p-6 rounded-lg border border-gray-700/50 hover:border-accent transition-colors">
-          {children}
-        </Link>
+        {href ? (
+          <Link
+            href={href}
+            target={isExternal ? "_blank" : undefined}
+            rel={isExternal ? "noopener noreferrer" : undefined}
+            className={`${baseClass} hover:border-accent`}
+          >
+            {children}
+          </Link>
+        ) : (
+          <div className={`${baseClass} border-gray-700/30 cursor-default`}>
+            {children}
+          </div>
+        )}
       </motion.div>
     </motion.div>
   );

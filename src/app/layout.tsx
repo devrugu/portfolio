@@ -10,8 +10,45 @@ import CustomCursor from "@/components/CustomCursor";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Uğurcan Yılmaz - Personal Website", // Update the title
-  description: "My professional resume and personal blog.", // Update the description
+  title: "Uğurcan Yılmaz — Software Engineer",
+  description:
+    "Software Engineer at TÜBİTAK BİLGEM specializing in high-performance, real-time signal processing software with C++ and Qt. Based in İstanbul, Türkiye.",
+  keywords: [
+    "Uğurcan Yılmaz",
+    "Software Engineer",
+    "C++",
+    "Qt",
+    "Signal Processing",
+    "TÜBİTAK",
+    "BİLGEM",
+    "Istanbul",
+    "Turkey",
+  ],
+  authors: [{ name: "Uğurcan Yılmaz", url: "https://www.ugurcanyilmaz.com" }],
+  openGraph: {
+    type: "website",
+    url: "https://www.ugurcanyilmaz.com",
+    title: "Uğurcan Yılmaz — Software Engineer",
+    description:
+      "Software Engineer at TÜBİTAK BİLGEM specializing in high-performance, real-time signal processing with C++ and Qt.",
+    siteName: "Uğurcan Yılmaz",
+    images: [
+      {
+        url: "https://www.ugurcanyilmaz.com/screenshot-homepage.png",
+        width: 1200,
+        height: 630,
+        alt: "Uğurcan Yılmaz — Software Engineer",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Uğurcan Yılmaz — Software Engineer",
+    description:
+      "Software Engineer at TÜBİTAK BİLGEM specializing in real-time signal processing with C++ and Qt.",
+    images: ["https://www.ugurcanyilmaz.com/screenshot-homepage.png"],
+  },
+  metadataBase: new URL("https://www.ugurcanyilmaz.com"),
 };
 
 export default function RootLayout({
@@ -21,7 +58,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* Add the GA component here */}
       <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID!} />
       <body className={`${inter.className} bg-background text-on-background hide-cursor`}>
         <CustomCursor />

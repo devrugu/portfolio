@@ -32,10 +32,10 @@ export default function MouseSpotlight() {
     <motion.div
       className="pointer-events-none fixed inset-0 z-[-10]"
       style={{
-        background: `radial-gradient(600px at ${mousePosition.x}px ${mousePosition.y}px, rgba(255, 193, 7, 0.15), transparent 80%)`
+        background: `radial-gradient(600px at ${mousePosition.x}px ${mousePosition.y}px, var(--spotlight-color), transparent 80%)`
       }}
       animate={{ 
-        background: `radial-gradient(600px at ${mousePosition.x}px ${mousePosition.y}px, rgba(255, 193, 7, 0.15), transparent 80%)`
+        background: `radial-gradient(600px at ${mousePosition.x}px ${mousePosition.y}px, var(--spotlight-color), transparent 80%)`
       }}
       transition={{ type: 'tween', ease: 'backOut', duration: 0.5 }}
     />

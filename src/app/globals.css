@@ -2,6 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Theme variables ─────────────────────────────────────── */
+:root, [data-theme="dark"] {
+  --color-background:    #121212;
+  --color-on-background: #E0E0E0;
+  --color-primary:       #F5F5F5;
+  --color-on-primary:    #121212;
+  --color-accent:        #FFC107;
+  --color-accent-hover:  #FFA000;
+  --color-surface:       rgba(31,31,31,0.5);
+  --color-border:        rgba(75,75,75,0.5);
+  --scrollbar-bg:        #121212;
+  --scrollbar-thumb:     #333333;
+  --scrollbar-thumb-hover: #555555;
+  --spotlight-color:     rgba(255,193,7,0.15);
+}
+
+[data-theme="light"] {
+  --color-background:    #f5f0e8;
+  --color-on-background: #4a4540;
+  --color-primary:       #1a1a1a;
+  --color-on-primary:    #f5f0e8;
+  --color-accent:        #d97706;
+  --color-accent-hover:  #b45309;
+  --color-surface:       rgba(255,255,255,0.7);
+  --color-border:        rgba(0,0,0,0.1);
+  --scrollbar-bg:        #f5f0e8;
+  --scrollbar-thumb:     #c0b8ac;
+  --scrollbar-thumb-hover: #a09890;
+  --spotlight-color:     rgba(217,119,6,0.08);
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 /* Only hide cursor on devices that support hover (non-touch) */
 @media (hover: hover) and (pointer: fine) {
   .hide-cursor-desktop {
@@ -27,15 +64,15 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #121212; /* background color */
+  background: var(--scrollbar-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #333333; /* A slightly lighter gray for the thumb */
+  background-color: var(--scrollbar-thumb);
   border-radius: 6px;
-  border: 3px solid #121212; /* Creates a nice padding effect */
+  border: 3px solid var(--scrollbar-bg);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #555555; /* Lighter gray on hover */
+  background-color: var(--scrollbar-thumb-hover);
 }

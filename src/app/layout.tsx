@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import MouseSpotlight from "@/components/MouseSpotlight";
 import CustomCursor from "@/components/CustomCursor";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -59,16 +60,28 @@ export default function RootLayout({
   return (
     <html lang="en">
       <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID!} />
-      <body className={`${inter.className} bg-background text-on-background hide-cursor-desktop`}>
-        <CustomCursor />
-        <MouseSpotlight />
-        <div className="flex flex-col min-h-screen">
-          <Header />
-          <div className="flex-grow container mx-auto max-w-5xl px-4 py-8">
-            {children}
+      <body className={`${inter.className} hide-cursor-desktop`}>
+        {/* Prevent flash of wrong theme */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            try {
+              var t = localStorage.getItem('theme');
+              if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+              document.documentElement.setAttribute('data-theme', t);
+            } catch(e) {}
+          })();
+        `}} />
+        <ThemeProvider>
+          <CustomCursor />
+          <MouseSpotlight />
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <div className="flex-grow container mx-auto max-w-5xl px-4 py-8">
+              {children}
+            </div>
+            <Footer />
           </div>
-          <Footer />
-        </div>
+        </ThemeProvider>
       </body>
     </html>
   );

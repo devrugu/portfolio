@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import ThemeToggle from './ThemeToggle';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
@@ -58,8 +59,9 @@ export default function Header() {
             Uğurcan Yılmaz
           </Link>
 
-          {/* Desktop nav */}
-          <nav className="hidden md:block">
+          {/* Desktop nav + theme toggle */}
+          <div className="hidden md:flex items-center gap-6">
+          <nav>
             <ul
               className="flex items-center space-x-6 text-sm font-medium text-on-background"
               onMouseLeave={() => setHoveredLink(null)}
@@ -82,6 +84,8 @@ export default function Header() {
               ))}
             </ul>
           </nav>
+          <ThemeToggle />
+          </div>
 
           {/* Hamburger button — mobile only */}
           <button
@@ -132,6 +136,10 @@ export default function Header() {
                   </li>
                 ))}
               </ul>
+              <div className="pt-3 pb-1 border-t border-gray-700/30 mt-2 flex items-center justify-between px-2">
+                <span className="text-sm text-gray-500">Toggle theme</span>
+                <ThemeToggle />
+              </div>
             </nav>
           </motion.div>
         )}

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 const navLinks = [
+  { name: "About", href: "/about" },
   { name: "Projects", href: "/#projects" },
   { name: "Resume", href: "/resume" },
   { name: "Blog", href: "/blog" },

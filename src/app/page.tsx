@@ -33,7 +33,7 @@ const projects = [
       "A low-level implementation of a Finite Impulse Response (FIR) digital filter in the C programming language, focusing on performance and accuracy.",
     tags: ["C"],
     tagColors: ["bg-tagColors-cpp"],
-    link: "https://github.com/devrugu/fir-band-pass-filter",
+    link: "https://github.com/devrugu/FIR-filter-implementation",
     nda: false,
   },
   {
@@ -51,7 +51,7 @@ const projects = [
       "A full-stack web application for managing healthcare records and appointments, built with a classic LAMP stack.",
     tags: ["PHP", "HTML/CSS", "MySQL"],
     tagColors: ["bg-tagColors-php", "bg-orange-500", "bg-tagColors-mysql"],
-    link: "https://github.com/devrugu/healthcare-management-system",
+    link: "https://github.com/devrugu/Database-Management-System",
     nda: false,
   },
   {
@@ -60,7 +60,7 @@ const projects = [
       "A web-based platform for managing event registrations and generating digital certificates for attendees.",
     tags: ["PHP", "HTML/CSS", "MySQL"],
     tagColors: ["bg-tagColors-php", "bg-orange-500", "bg-tagColors-mysql"],
-    link: "https://github.com/devrugu/event-certificate-system",
+    link: "https://github.com/devrugu/certificate-me",
     nda: false,
   },
   {
@@ -167,6 +167,38 @@ export default async function HomePage() {
                 <span className="text-sm text-gray-400 tracking-wide uppercase">Years of Experience</span>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Skills Section */}
+        <section className="mb-24">
+          <h2 className="text-4xl font-bold text-primary mb-8">Technical Stack</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {[
+              { name: "C/C++",       icon: "⚙️",  category: "Language"   },
+              { name: "Qt",          icon: "🖥️",  category: "Framework"  },
+              { name: "Python",      icon: "🐍",  category: "Language"   },
+              { name: "MATLAB",      icon: "📊",  category: "Tool"       },
+              { name: "JavaScript",  icon: "🟨",  category: "Language"   },
+              { name: "Next.js",     icon: "▲",   category: "Framework"  },
+              { name: "React",       icon: "⚛️",  category: "Framework"  },
+              { name: "Git",         icon: "🌿",  category: "Tool"       },
+              { name: "CMake",       icon: "🔨",  category: "Tool"       },
+              { name: "MySQL",       icon: "🐬",  category: "Database"   },
+              { name: "MongoDB",     icon: "🍃",  category: "Database"   },
+              { name: "PHP",         icon: "🐘",  category: "Language"   },
+            ].map((tech) => (
+              <div
+                key={tech.name}
+                className="flex items-center gap-3 bg-gray-800/40 border border-gray-700/40 rounded-xl px-4 py-3 hover:border-accent/40 hover:bg-gray-800/70 transition-colors"
+              >
+                <span className="text-xl leading-none">{tech.icon}</span>
+                <div>
+                  <div className="text-primary text-sm font-medium">{tech.name}</div>
+                  <div className="text-gray-500 text-xs">{tech.category}</div>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 

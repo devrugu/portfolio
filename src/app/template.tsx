@@ -1,22 +1,29 @@
 "use client";
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// Define the animation variants
 const variants = {
-  hidden: { opacity: 0, x: -20, y: 0 },
-  enter: { opacity: 1, x: 0, y: 0 },
+  hidden: { opacity: 0, y: 16 },
+  enter:  { opacity: 1, y: 0  },
+  exit:   { opacity: 0, y: -8 },
 };
 
 export default function Template({ children }: { children: React.ReactNode }) {
   return (
-    <motion.main
-      variants={variants}
-      initial="hidden"
-      animate="enter"
-      transition={{ type: 'tween', ease: 'linear', duration: 0.5 }}
-    >
-      {children}
-    </motion.main>
+    <AnimatePresence mode="wait">
+      <motion.main
+        variants={variants}
+        initial="hidden"
+        animate="enter"
+        exit="exit"
+        transition={{
+          type: 'tween',
+          ease: [0.25, 0.1, 0.25, 1], // cubic-bezier ease-out
+          duration: 0.35,
+        }}
+      >
+        {children}
+      </motion.main>
+    </AnimatePresence>
   );
 }

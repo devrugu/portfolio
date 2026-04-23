@@ -6,7 +6,8 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/(.*)',
+        // Apply strict CORS only to pages that need Pyodide (watermarking demo)
+        source: '/projects/digital-watermarking',
         headers: [
           {
             key: 'Cross-Origin-Opener-Policy',
@@ -15,6 +16,20 @@ const nextConfig = {
           {
             key: 'Cross-Origin-Embedder-Policy',
             value: 'require-corp',
+          },
+        ],
+      },
+      {
+        // Print page needs relaxed CORS so Sanity CDN images load
+        source: '/resume/print',
+        headers: [
+          {
+            key: 'Cross-Origin-Opener-Policy',
+            value: 'unsafe-none',
+          },
+          {
+            key: 'Cross-Origin-Embedder-Policy',
+            value: 'unsafe-none',
           },
         ],
       },

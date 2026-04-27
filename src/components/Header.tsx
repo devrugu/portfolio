@@ -6,23 +6,31 @@ import ThemeToggle from './ThemeToggle';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
-  { name: "About",    href: "/about"     },
+  { name: "About", href: "/about" },
   { name: "Projects", href: "/#projects" },
-  { name: "Resume",   href: "/resume"    },
-  { name: "Blog",     href: "/blog"      },
-  { name: "Contact",  href: "/contact"   },
+  { name: "Resume", href: "/resume" },
+  { name: "Blog", href: "/blog" },
+  { name: "Contact", href: "/contact" },
 ];
 
 export default function Header() {
-  const [isScrolled,   setIsScrolled]   = useState(false);
-  const [isHovered,    setIsHovered]    = useState(false);
-  const [hoveredLink,  setHoveredLink]  = useState<string | null>(null);
-  const [menuOpen,     setMenuOpen]     = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [availability, setAvailability] = useState<{ openToWork: boolean; statusText: string } | null>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    fetch('/api/site-settings')
+      .then(r => r.json())
+      .then(d => setAvailability({ openToWork: d.openToWork ?? false, statusText: d.statusText ?? 'Open to Opportunities' }))
+      .catch(() => { });
   }, []);
 
   // Close menu on route change / resize
@@ -33,9 +41,9 @@ export default function Header() {
   }, []);
 
   const headerVariants = {
-    top:      { backgroundColor: 'rgba(18,18,18,1)',   height: '80px', backdropFilter: 'blur(0px)'  },
+    top: { backgroundColor: 'rgba(18,18,18,1)', height: '80px', backdropFilter: 'blur(0px)' },
     scrolled: { backgroundColor: 'rgba(18,18,18,0.3)', height: '64px', backdropFilter: 'blur(12px)' },
-    hovered:  { backgroundColor: 'rgba(18,18,18,1)',   height: '64px', backdropFilter: 'blur(12px)' },
+    hovered: { backgroundColor: 'rgba(18,18,18,1)', height: '64px', backdropFilter: 'blur(12px)' },
   };
 
   const getState = () => {
@@ -55,36 +63,47 @@ export default function Header() {
         onMouseLeave={() => setIsHovered(false)}
       >
         <div className="container mx-auto flex max-w-5xl items-center justify-between px-4 h-full">
-          <Link href="/" className="text-xl font-bold text-primary hover:text-accent transition-colors">
-            Uğurcan Yılmaz
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link href="/" className="text-xl font-bold text-primary hover:text-accent transition-colors">
+              Uğurcan Yılmaz
+            </Link>
+            {availability?.openToWork && (
+              <div className="hidden sm:flex items-center gap-1.5 bg-green-500/10 border border-green-500/25 rounded-full px-3 py-1">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+                </span>
+                <span className="text-green-400 text-xs font-medium whitespace-nowrap">{availability.statusText}</span>
+              </div>
+            )}
+          </div>
 
           {/* Desktop nav + theme toggle */}
           <div className="hidden md:flex items-center gap-6">
-          <nav>
-            <ul
-              className="flex items-center space-x-6 text-sm font-medium text-on-background"
-              onMouseLeave={() => setHoveredLink(null)}
-            >
-              {navLinks.map((link) => (
-                <li key={link.name} className="relative" onMouseEnter={() => setHoveredLink(link.href)}>
-                  <Link href={link.href} className="transition-colors hover:text-primary">
-                    {link.name}
-                  </Link>
-                  {hoveredLink === link.href && (
-                    <motion.div
-                      className="absolute bottom-[-4px] left-0 w-full h-[2px] bg-accent"
-                      layoutId="underline"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    />
-                  )}
-                </li>
-              ))}
-            </ul>
-          </nav>
-          <ThemeToggle />
+            <nav>
+              <ul
+                className="flex items-center space-x-6 text-sm font-medium text-on-background"
+                onMouseLeave={() => setHoveredLink(null)}
+              >
+                {navLinks.map((link) => (
+                  <li key={link.name} className="relative" onMouseEnter={() => setHoveredLink(link.href)}>
+                    <Link href={link.href} className="transition-colors hover:text-primary">
+                      {link.name}
+                    </Link>
+                    {hoveredLink === link.href && (
+                      <motion.div
+                        className="absolute bottom-[-4px] left-0 w-full h-[2px] bg-accent"
+                        layoutId="underline"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                      />
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            <ThemeToggle />
           </div>
 
           {/* Hamburger button — mobile only */}

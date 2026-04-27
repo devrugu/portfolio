@@ -7,6 +7,24 @@ import FadeIn from '@/components/FadeIn';
 import AnimatedCard from '@/components/AnimatedCard';
 import StaggeredList from '@/components/StaggeredList';
 import TrackedLink from '@/components/TrackedLink';
+import dbConnect from '@/lib/mongodb';
+import SiteSettingsModel from '@/models/SiteSettings';
+
+export const dynamic = 'force-dynamic';
+
+async function getAvailability(): Promise<{ openToWork: boolean; statusText: string }> {
+  try {
+    await dbConnect();
+    const openToWorkDoc = await SiteSettingsModel.findOne({ key: 'openToWork' }).lean() as any;
+    const statusTextDoc = await SiteSettingsModel.findOne({ key: 'statusText' }).lean() as any;
+    return {
+      openToWork: openToWorkDoc?.value ?? false,
+      statusText: statusTextDoc?.value ?? 'Open to Opportunities',
+    };
+  } catch {
+    return { openToWork: false, statusText: 'Open to Opportunities' };
+  }
+}
 
 async function getAuthorImage() {
   const query = `*[_type == "author"][0] { image }`;
@@ -99,6 +117,7 @@ export default async function HomePage() {
               <span className="text-accent"><TextScramble text="Hi," /></span>{' '}
               <TextScramble text="I'm Uğurcan Yılmaz" />
             </h1>
+
             <p className="text-lg text-on-background mb-4">
               I'm a Computer Engineer based in İstanbul, Türkiye, currently working as a
               Software Engineer at TÜBİTAK BİLGEM. I specialize in developing

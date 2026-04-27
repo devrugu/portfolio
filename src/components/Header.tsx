@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ThemeToggle from './ThemeToggle';
+import CommandPalette from './CommandPalette';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
@@ -79,7 +80,8 @@ export default function Header() {
           </div>
 
           {/* Desktop nav + theme toggle */}
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-4">
+            <CommandPalette />
             <nav>
               <ul
                 className="flex items-center space-x-6 text-sm font-medium text-on-background"

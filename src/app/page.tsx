@@ -72,6 +72,15 @@ const projects = [
     link: "/projects/regex-engine",
     nda: false,
   },
+  {
+    title: "Histogram Analysis on Gray Level Image",
+    description:
+      "Implementation of histogram computation, equalization, and stretching techniques on grayscale images in C — foundational image processing from scratch.",
+    tags: ["C"],
+    tagColors: ["bg-tagColors-cpp"],
+    link: "/projects/histogram-analysis",
+    nda: false,
+  },
 ];
 
 const experienceYears = new Date().getFullYear() - WORK_START_YEAR;
@@ -175,18 +184,18 @@ export default async function HomePage() {
           <h2 className="text-4xl font-bold text-primary mb-8">Technical Stack</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
-              { name: "C/C++",       icon: "⚙️",  category: "Language"   },
-              { name: "Qt",          icon: "🖥️",  category: "Framework"  },
-              { name: "Python",      icon: "🐍",  category: "Language"   },
-              { name: "MATLAB",      icon: "📊",  category: "Tool"       },
-              { name: "JavaScript",  icon: "🟨",  category: "Language"   },
-              { name: "Next.js",     icon: "▲",   category: "Framework"  },
-              { name: "React",       icon: "⚛️",  category: "Framework"  },
-              { name: "Git",         icon: "🌿",  category: "Tool"       },
-              { name: "CMake",       icon: "🔨",  category: "Tool"       },
-              { name: "MySQL",       icon: "🐬",  category: "Database"   },
-              { name: "MongoDB",     icon: "🍃",  category: "Database"   },
-              { name: "PHP",         icon: "🐘",  category: "Language"   },
+              { name: "C/C++", icon: "⚙️", category: "Language" },
+              { name: "Qt", icon: "🖥️", category: "Framework" },
+              { name: "Python", icon: "🐍", category: "Language" },
+              { name: "MATLAB", icon: "📊", category: "Tool" },
+              { name: "JavaScript", icon: "🟨", category: "Language" },
+              { name: "Next.js", icon: "▲", category: "Framework" },
+              { name: "React", icon: "⚛️", category: "Framework" },
+              { name: "Git", icon: "🌿", category: "Tool" },
+              { name: "CMake", icon: "🔨", category: "Tool" },
+              { name: "MySQL", icon: "🐬", category: "Database" },
+              { name: "MongoDB", icon: "🍃", category: "Database" },
+              { name: "PHP", icon: "🐘", category: "Language" },
             ].map((tech) => (
               <div
                 key={tech.name}

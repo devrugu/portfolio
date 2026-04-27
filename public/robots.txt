@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Block admin pages from crawlers
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://www.ugurcanyilmaz.com/sitemap.xml

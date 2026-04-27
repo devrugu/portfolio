@@ -5,14 +5,20 @@ import Image from "next/image";
 import { client } from "@/sanity/client";
 import { urlFor } from "@/sanity/image";
 import ResumeDownloadButton from "@/components/ResumeDownloadButton";
+import ResumeSkeleton from "@/components/ResumeSkeleton";
 import SkillBar from "@/components/SkillBar";
 
-export const revalidate = 60; // Re-fetch data at most once every 60 seconds
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 // This function fetches the resume data from the database.
 async function getResumeData() {
-  // Connect to MongoDB
-  await dbConnect();
+  try {
+    await dbConnect();
+  } catch (e) {
+    console.error('MongoDB connection failed during getResumeData:', e);
+    return null;
+  }
   const resume = await ResumeModel.findOne({ userId: "admin_user_01" }).lean();
   if (!resume) return null;
 
@@ -50,89 +56,89 @@ export default async function ResumePage() {
         <ResumeDownloadButton elementId="resume-to-print" fileName={fileName} />
       </div>
       <div id="resume-to-print">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row items-center justify-between mb-12">
-        {/* Profile Image */}
-        {authorImage && (
-          <div className="md:order-2 mb-6 md:mb-0">
-            <Image
-              src={urlFor(authorImage).width(200).height(200).url()}
-              alt={personalInfo.name}
-              width={200}
-              height={200}
-              className="rounded-full border-4 border-gray-700/50 object-cover"
-              priority // Helps the image load faster
-            />
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row items-center justify-between mb-12">
+          {/* Profile Image */}
+          {authorImage && (
+            <div className="md:order-2 mb-6 md:mb-0">
+              <Image
+                src={urlFor(authorImage).width(200).height(200).url()}
+                alt={personalInfo.name}
+                width={200}
+                height={200}
+                className="rounded-full border-4 border-gray-700/50 object-cover"
+                priority // Helps the image load faster
+              />
+            </div>
+          )}
+          {/* Personal Details */}
+          <div className="text-center md:text-left md:order-1">
+            <h1 className="text-5xl font-bold text-primary">{personalInfo.name}</h1>
+            <p className="text-lg text-gray-400 mt-2">
+              {personalInfo.location} | {personalInfo.phone}
+            </p>
+            <p className="text-lg text-gray-400 mt-1">
+              {personalInfo.email} |
+              <a href={personalInfo.website} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline ml-1">
+                {personalInfo.website}
+              </a>
+            </p>
           </div>
-        )}
-        {/* Personal Details */}
-        <div className="text-center md:text-left md:order-1">
-          <h1 className="text-5xl font-bold text-primary">{personalInfo.name}</h1>
-          <p className="text-lg text-gray-400 mt-2">
-            {personalInfo.location} | {personalInfo.phone}
-          </p>
-          <p className="text-lg text-gray-400 mt-1">
-            {personalInfo.email} |
-            <a href={personalInfo.website} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline ml-1">
-              {personalInfo.website}
-            </a>
-          </p>
         </div>
-      </div>
 
-      {/* Summary Section */}
-      <section className="mb-10">
-        <h2 className="text-3xl font-semibold text-accent mb-4 border-b-2 border-gray-700 pb-2">Summary</h2>
-        <p className="text-lg text-on-background">{personalInfo.summary}</p>
-      </section>
+        {/* Summary Section */}
+        <section className="mb-10">
+          <h2 className="text-3xl font-semibold text-accent mb-4 border-b-2 border-gray-700 pb-2">Summary</h2>
+          <p className="text-lg text-on-background">{personalInfo.summary}</p>
+        </section>
 
-      {/* Experience Section */}
-      <section className="mb-10">
-        <h2 className="text-3xl font-semibold text-accent mb-4 border-b-2 border-gray-700 pb-2">Experience</h2>
-        <div className="space-y-6">
-          {experience.map((exp) => (
-            <div key={exp._id}>
-              <h3 className="text-2xl font-bold text-primary">{exp.jobTitle}</h3>
-              <p className="text-lg font-medium text-gray-400">{exp.company} | {exp.location}</p>
-              <p className="text-sm text-gray-500">{exp.startDate} - {exp.endDate || 'Present'}</p>
-              <ul className="list-disc list-inside mt-2 space-y-1 text-on-background">
-                {exp.description.map((point, i) => (
-                  <li key={i}>{point}</li>
-                ))}
-              </ul>
+        {/* Experience Section */}
+        <section className="mb-10">
+          <h2 className="text-3xl font-semibold text-accent mb-4 border-b-2 border-gray-700 pb-2">Experience</h2>
+          <div className="space-y-6">
+            {experience.map((exp) => (
+              <div key={exp._id}>
+                <h3 className="text-2xl font-bold text-primary">{exp.jobTitle}</h3>
+                <p className="text-lg font-medium text-gray-400">{exp.company} | {exp.location}</p>
+                <p className="text-sm text-gray-500">{exp.startDate} - {exp.endDate || 'Present'}</p>
+                <ul className="list-disc list-inside mt-2 space-y-1 text-on-background">
+                  {exp.description.map((point, i) => (
+                    <li key={i}>{point}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Education Section */}
+        <section className="mb-10">
+          <h2 className="text-3xl font-semibold text-accent mb-4 border-b-2 border-gray-700 pb-2">Education</h2>
+          {education.map((edu) => (
+            <div key={edu._id}>
+              <h3 className="text-2xl font-bold text-primary">{edu.degree}</h3>
+              <p className="text-lg font-medium text-gray-400">{edu.institution} | {edu.location}</p>
+              <p className="text-sm text-gray-500">Graduated: {edu.graduationYear}</p>
             </div>
           ))}
-        </div>
-      </section>
+        </section>
 
-      {/* Education Section */}
-      <section className="mb-10">
-        <h2 className="text-3xl font-semibold text-accent mb-4 border-b-2 border-gray-700 pb-2">Education</h2>
-        {education.map((edu) => (
-          <div key={edu._id}>
-            <h3 className="text-2xl font-bold text-primary">{edu.degree}</h3>
-            <p className="text-lg font-medium text-gray-400">{edu.institution} | {edu.location}</p>
-            <p className="text-sm text-gray-500">Graduated: {edu.graduationYear}</p>
+        {/* Skills Section */}
+        <section>
+          <h2 className="text-3xl font-semibold text-accent mb-6 border-b-2 border-gray-700 pb-2">Skills</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+            {skills
+              // Optional: Sort skills by proficiency, descending
+              .sort((a, b) => b.proficiency - a.proficiency)
+              .map((skill) => (
+                <SkillBar
+                  key={skill._id}
+                  skill={skill.name}
+                  proficiency={skill.proficiency}
+                />
+              ))}
           </div>
-        ))}
-      </section>
-
-      {/* Skills Section */}
-      <section>
-  <h2 className="text-3xl font-semibold text-accent mb-6 border-b-2 border-gray-700 pb-2">Skills</h2>
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-    {skills
-      // Optional: Sort skills by proficiency, descending
-      .sort((a, b) => b.proficiency - a.proficiency)
-      .map((skill) => (
-        <SkillBar
-          key={skill._id}
-          skill={skill.name}
-          proficiency={skill.proficiency}
-        />
-    ))}
-  </div>
-</section>
+        </section>
       </div>
     </div>
   );

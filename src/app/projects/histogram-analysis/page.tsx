@@ -1,3 +1,4 @@
+import ProjectViewCounter from "@/components/ProjectViewCounter";
 import Link from "next/link";
 import FadeIn from "@/components/FadeIn";
 
@@ -20,7 +21,10 @@ export default function HistogramAnalysisPage() {
                         View on GitHub
                     </a>
                 </div>
-                <p className="text-accent font-medium mb-8">Image Processing · C</p>
+                <div className="flex items-center gap-4 mb-8">
+                    <p className="text-accent font-medium">Image Processing · C</p>
+                    <ProjectViewCounter slug="histogram-analysis" />
+                </div>
 
                 <section className="mb-10">
                     <h2 className="text-2xl font-semibold text-primary mb-4">Overview</h2>

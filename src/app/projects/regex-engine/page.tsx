@@ -1,3 +1,4 @@
+import ProjectViewCounter from "@/components/ProjectViewCounter";
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
@@ -19,7 +20,7 @@ export default function RegexEnginePage() {
   const [isRealtime, setIsRealtime] = useState<boolean>(true);
   const [matches, setMatches] = useState<Match[]>([]);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Updated state for flags
   const [flags, setFlags] = useState({
     caseInsensitive: false,
@@ -44,12 +45,12 @@ export default function RegexEnginePage() {
     try {
       setError(null);
       // Pass both flags to the engine
-      regexEngine.compile(pattern, { 
-        caseInsensitive: flags.caseInsensitive, 
-        wholeWord: flags.wholeWord 
+      regexEngine.compile(pattern, {
+        caseInsensitive: flags.caseInsensitive,
+        wholeWord: flags.wholeWord
       });
-      const foundMatches = regexEngine.search(testString, { 
-        wholeWord: flags.wholeWord 
+      const foundMatches = regexEngine.search(testString, {
+        wholeWord: flags.wholeWord
       });
       setMatches(foundMatches);
     } catch (e: any) {
@@ -57,7 +58,7 @@ export default function RegexEnginePage() {
       setMatches([]);
     }
   };
-  
+
   useEffect(() => {
     if (isRealtime) {
       runSearch();
@@ -78,14 +79,14 @@ export default function RegexEnginePage() {
     <div>
       {/* Page Header */}
       <div className="flex items-start justify-between mb-8">
-  <div>
-    <h1 className="text-4xl font-bold text-primary">Live Regex Engine Demo</h1>
-    <p className="text-on-background mt-2 max-w-2xl">
-      A from-scratch Regular Expression Engine implemented with Thompson's Construction (NFA) and Subset Construction (DFA), running directly in your browser.
-    </p>
-  </div>
-  <GitHubLink href="https://github.com/devrugu/Regular-Expression-Engine" />
-</div>
+        <div>
+          <h1 className="text-4xl font-bold text-primary">Live Regex Engine Demo</h1>
+          <p className="text-on-background mt-2 max-w-2xl">
+            A from-scratch Regular Expression Engine implemented with Thompson's Construction (NFA) and Subset Construction (DFA), running directly in your browser.
+          </p>
+        </div>
+        <GitHubLink href="https://github.com/devrugu/Regular-Expression-Engine" />
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Left Column: Inputs and Controls */}
@@ -128,7 +129,7 @@ export default function RegexEnginePage() {
                   <label htmlFor="case-insensitive-flag" className="text-on-background">Case-Insensitive</label>
                 </div>
               </div>
-              
+
               {/* Real-time Toggle */}
               <div className="flex items-center gap-2">
                 <input type="checkbox" id="realtime-toggle" checked={isRealtime} onChange={(e) => setIsRealtime(e.target.checked)} className="h-4 w-4 rounded bg-gray-700 border-gray-600 text-accent focus:ring-accent" />
@@ -136,7 +137,7 @@ export default function RegexEnginePage() {
               </div>
             </div>
           </div>
-          
+
           {/* Animated "Run Search" Button */}
           <AnimatePresence>
             {!isRealtime && (

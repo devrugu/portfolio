@@ -1,3 +1,4 @@
+import ProjectViewCounter from "@/components/ProjectViewCounter";
 import Link from "next/link";
 import FadeIn from "@/components/FadeIn";
 
@@ -30,7 +31,10 @@ export default function HealthcareSystemPage() {
             View on GitHub
           </a>
         </div>
-        <p className="text-accent font-medium mb-8">Full-Stack Web Application · PHP · MySQL</p>
+        <div className="flex items-center gap-4 mb-8">
+          <p className="text-accent font-medium">Full-Stack Web Application · PHP · MySQL</p>
+          <ProjectViewCounter slug="healthcare-system" />
+        </div>
 
         {/* Overview */}
         <section className="mb-10">

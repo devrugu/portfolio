@@ -1,3 +1,4 @@
+import ProjectViewCounter from "@/components/ProjectViewCounter";
 import Link from "next/link";
 import FadeIn from "@/components/FadeIn";
 
@@ -40,7 +41,10 @@ export default function FIRFilterPage() {
             View on GitHub
           </a>
         </div>
-        <p className="text-accent font-medium mb-8">Digital Signal Processing · C</p>
+        <div className="flex items-center gap-4 mb-8">
+          <p className="text-accent font-medium">Digital Signal Processing · C</p>
+          <ProjectViewCounter slug="fir-filter" />
+        </div>
 
         {/* Overview */}
         <section className="mb-10">

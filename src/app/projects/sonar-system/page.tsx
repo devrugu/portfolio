@@ -1,3 +1,4 @@
+import ProjectViewCounter from "@/components/ProjectViewCounter";
 import Link from "next/link";
 import FadeIn from "@/components/FadeIn";
 

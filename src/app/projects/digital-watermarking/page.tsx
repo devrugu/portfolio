@@ -1,3 +1,4 @@
+import ProjectViewCounter from "@/components/ProjectViewCounter";
 "use client";
 
 import { useState } from 'react';
@@ -8,15 +9,15 @@ import GitHubLink from '@/components/GitHubLink';
 
 // Helper function to convert a Base64 string back to a File object
 const dataURLtoFile = (dataurl: string, filename: string): File => {
-    const arr = dataurl.split(',');
-    const mime = arr[0].match(/:(.*?);/)?.[1];
-    const bstr = atob(arr[1]); 
-    let n = bstr.length; 
-    const u8arr = new Uint8Array(n);
-    while(n--){
-        u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new File([u8arr], filename, {type:mime});
+  const arr = dataurl.split(',');
+  const mime = arr[0].match(/:(.*?);/)?.[1];
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], filename, { type: mime });
 }
 
 // A reusable component for our image display boxes
@@ -37,8 +38,8 @@ const ImageBox = ({ title, imageUrl, onImageUpload, id, fileName }: { title: str
         </label>
       )}
       {imageUrl && (
-        <a 
-          href={imageUrl} 
+        <a
+          href={imageUrl}
           download={fileName || 'image.png'}
           className="cursor-pointer bg-green-600/20 text-green-300 px-4 py-2 rounded-lg hover:bg-green-600/40 transition-colors"
         >
@@ -147,10 +148,10 @@ export default function WatermarkingPage() {
   return (
     <div>
       {/* --- Image Viewer Component --- */}
-      <ImageViewer 
-        isOpen={!!viewerImageUrl} 
-        onClose={() => setViewerImageUrl(null)} 
-        imageUrl={viewerImageUrl || ''} 
+      <ImageViewer
+        isOpen={!!viewerImageUrl}
+        onClose={() => setViewerImageUrl(null)}
+        imageUrl={viewerImageUrl || ''}
       />
 
       {/* --- Explanation Modal Component --- */}
@@ -171,12 +172,12 @@ export default function WatermarkingPage() {
             <li><strong>Extract:</strong> Use the generated stego image and enter the same secret key. Click "Extract Watermark" to recover the original watermark.</li>
             <li><strong>Verify:</strong> If you use the wrong key during extraction, you will get a noisy, garbled result, proving the keyed mask works.</li>
           </ol>
-           <h3 className="text-accent">Use Cases & Limitations</h3>
-           <p>
-              LSB watermarking is a high-capacity method for proving ownership or detecting tampering in digital media. However, it is <strong>not robust</strong> against transformations like JPEG compression, resizing, or heavy filtering. It is best suited for workflows where you need to verify the integrity of a lossless image like a PNG.
-            </p>
+          <h3 className="text-accent">Use Cases & Limitations</h3>
+          <p>
+            LSB watermarking is a high-capacity method for proving ownership or detecting tampering in digital media. However, it is <strong>not robust</strong> against transformations like JPEG compression, resizing, or heavy filtering. It is best suited for workflows where you need to verify the integrity of a lossless image like a PNG.
+          </p>
 
-            {/* --- Diagram Buttons --- */}
+          {/* --- Diagram Buttons --- */}
           <div className="pt-4 border-t border-gray-700">
             <h3 className="text-accent">Algorithm Flow Diagrams</h3>
             <p>Click to view a detailed diagram of each process in a zoomable, pannable viewer.</p>
@@ -196,29 +197,29 @@ export default function WatermarkingPage() {
       </Modal>
 
       {/* --- Page Header with Explanation and GitHub Buttons --- */}
-<div className="mb-8 relative pt-12 md:pt-0">
-  {/* Container for the buttons */}
-  <div className="absolute top-0 left-0 right-0 flex justify-between items-start">
-    {/* Left Button */}
-    <button 
-      onClick={() => setIsModalOpen(true)}
-      className="bg-primary/10 text-primary font-semibold py-2 px-4 rounded-lg hover:bg-primary/20 transition-colors"
-    >
-      Explanation
-    </button>
-    {/* Right Button */}
-    <GitHubLink href="https://github.com/devrugu/digital-watermarking" />
-  </div>
+      <div className="mb-8 relative pt-12 md:pt-0">
+        {/* Container for the buttons */}
+        <div className="absolute top-0 left-0 right-0 flex justify-between items-start">
+          {/* Left Button */}
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-primary/10 text-primary font-semibold py-2 px-4 rounded-lg hover:bg-primary/20 transition-colors"
+          >
+            Explanation
+          </button>
+          {/* Right Button */}
+          <GitHubLink href="https://github.com/devrugu/digital-watermarking" />
+        </div>
 
-  {/* Centered Text Content */}
-  <div className="text-center">
-    <h1 className="text-4xl font-bold text-primary">Live Digital Watermarking Demo</h1>
-    <p className="text-on-background mt-2 max-w-3xl mx-auto">
-      An interactive demo of a block-based, LSB watermarking algorithm, running your Python script on the server.
-    </p>
-  </div>
-</div>
-      
+        {/* Centered Text Content */}
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-primary">Live Digital Watermarking Demo</h1>
+          <p className="text-on-background mt-2 max-w-3xl mx-auto">
+            An interactive demo of a block-based, LSB watermarking algorithm, running your Python script on the server.
+          </p>
+        </div>
+      </div>
+
       {isLoading && (
         <div className="flex items-center justify-center my-4">
           <div className="w-8 h-8 border-4 border-dashed rounded-full animate-spin border-accent"></div>
@@ -234,7 +235,7 @@ export default function WatermarkingPage() {
           <ImageBox title="2. Watermark Image" imageUrl={watermarkImagePreview} onImageUpload={(e) => handleImageUpload(e, 'watermark')} id="wm-upload" fileName="watermark.png" />
           <div>
             <label htmlFor="embed-key" className="block text-on-background font-semibold mb-2">3. Secret Key</label>
-            <input id="embed-key" type="text" value={embedKey} onChange={(e) => setEmbedKey(e.target.value)} className="w-full font-mono bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-primary focus:outline-none focus:ring-2 focus:ring-accent"/>
+            <input id="embed-key" type="text" value={embedKey} onChange={(e) => setEmbedKey(e.target.value)} className="w-full font-mono bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-primary focus:outline-none focus:ring-2 focus:ring-accent" />
           </div>
           <div>
             <label htmlFor="channels" className="block text-on-background font-semibold mb-2">4. Channels</label>
@@ -256,7 +257,7 @@ export default function WatermarkingPage() {
           <ImageBox title="1. Stego Image (from embed)" imageUrl={stegoImage} fileName="stego.png" />
           <div>
             <label htmlFor="extract-key" className="block text-on-background font-semibold mb-2">2. Secret Key</label>
-            <input id="extract-key" type="text" value={extractKey} onChange={(e) => setExtractKey(e.target.value)} placeholder="Enter the same secret key..." className="w-full font-mono bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-primary focus:outline-none focus:ring-2 focus:ring-accent"/>
+            <input id="extract-key" type="text" value={extractKey} onChange={(e) => setExtractKey(e.target.value)} placeholder="Enter the same secret key..." className="w-full font-mono bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-primary focus:outline-none focus:ring-2 focus:ring-accent" />
           </div>
           <div>
             <label htmlFor="channels-extract" className="block text-on-background font-semibold mb-2">3. Channels</label>

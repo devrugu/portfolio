@@ -9,7 +9,7 @@ interface TextScrambleProps {
 }
 
 export default function TextScramble({ text, className = '' }: TextScrambleProps) {
-  const [displayText, setDisplayText] = useState('');
+  const [displayText, setDisplayText] = useState(text); // initialize with real text for SEO
   const animationFrameId = useRef<number | null>(null);
   const lastUpdateTime = useRef<number>(0);
 

@@ -1,4 +1,5 @@
 import { client } from "@/sanity/client";
+import ReadingProgressBar from "@/components/ReadingProgressBar";
 import { urlFor } from "@/sanity/image";
 import { PortableText } from "@portabletext/react";
 import Image from "next/image";
@@ -51,6 +52,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
   return (
     <article className="max-w-3xl mx-auto">
+      <ReadingProgressBar />
 
       {/* Back link */}
       <Link href="/blog" className="inline-flex items-center gap-2 text-accent hover:underline text-sm mb-8">

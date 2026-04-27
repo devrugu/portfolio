@@ -1,4 +1,5 @@
 import FadeIn from "@/components/FadeIn";
+import GitHubActivity from "@/components/GitHubActivity";
 import Link from "next/link";
 
 const skills = {
@@ -65,12 +66,12 @@ export default function AboutPage() {
             </p>
             <p>
               Alongside my work, I'm pursuing an <span className="text-accent font-medium">M.Sc. in
-              Computer Engineering</span> at Özyeğin University, conducted entirely in English, deepening
+                Computer Engineering</span> at Özyeğin University, conducted entirely in English, deepening
               my theoretical foundation in areas I'm passionate about.
             </p>
             <p>
               Before TÜBİTAK, I completed my B.Sc. at <span className="text-accent font-medium">Karadeniz
-              Technical University</span> with a GPA of 3.15/4.00, graduating in 2023.
+                Technical University</span> with a GPA of 3.15/4.00, graduating in 2023.
             </p>
           </div>
         </section>
@@ -159,6 +160,12 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* GitHub Activity */}
+        <section className="mb-12">
+          <h2 className="text-2xl font-semibold text-primary mb-6">GitHub Activity</h2>
+          <GitHubActivity />
         </section>
 
         {/* CTA */}

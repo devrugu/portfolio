@@ -8,6 +8,7 @@ const adminNavLinks = [
   { name: "Dashboard", href: "/admin" },
   { name: "Blog Management", href: "/admin/blog" },
   { name: "Resume Editor", href: "/admin/resume" },
+  { name: "Profile Picture", href: "/admin/profile-picture" },
   { name: "Analytics", href: "/admin/analytics" },
   { name: "Phone Viewers", href: "/admin/phone-viewers" },
 ];

@@ -1,3 +1,4 @@
+import RelatedProjects from "@/components/RelatedProjects";
 import ProjectViewCounter from "@/components/ProjectViewCounter";
 import Link from "next/link";
 import FadeIn from "@/components/FadeIn";
@@ -125,9 +126,13 @@ export default function FIRFilterPage() {
         </section>
 
         {/* Back */}
-        <Link href="/#projects" className="inline-flex items-center gap-2 text-accent hover:underline text-sm">
-          ← Back to Projects
-        </Link>
+        <RelatedProjects currentSlug="fir-filter" />
+
+        <div className="mt-10">
+          <Link href="/#projects" className="inline-flex items-center gap-2 text-accent hover:underline text-sm">
+            ← Back to Projects
+          </Link>
+        </div>
       </div>
     </FadeIn>
   );

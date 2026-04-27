@@ -1,3 +1,4 @@
+import RelatedProjects from "@/components/RelatedProjects";
 import ProjectViewCounter from "@/components/ProjectViewCounter";
 "use client";
 
@@ -157,6 +158,7 @@ export default function RegexEnginePage() {
           </div>
         </div>
       </div>
+      <RelatedProjects currentSlug="regex-engine" />
     </div>
   );
 }

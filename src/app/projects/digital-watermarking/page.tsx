@@ -1,3 +1,4 @@
+import RelatedProjects from "@/components/RelatedProjects";
 import ProjectViewCounter from "@/components/ProjectViewCounter";
 "use client";
 
@@ -274,6 +275,7 @@ export default function WatermarkingPage() {
           <ImageBox title="Result: Extracted Watermark" imageUrl={extractedImage} fileName="extracted_watermark.png" />
         </div>
       </div>
+      <RelatedProjects currentSlug="digital-watermarking" />
     </div>
   );
 }

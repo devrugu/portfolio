@@ -8,6 +8,7 @@ import MouseSpotlight from "@/components/MouseSpotlight";
 import CustomCursor from "@/components/CustomCursor";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import BackToTop from "@/components/BackToTop";
+import TerminalEasterEgg from "@/components/TerminalEasterEgg";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -79,6 +80,7 @@ export default function RootLayout({
           <div className="flex flex-col min-h-screen">
             <Header />
             <BackToTop />
+            <TerminalEasterEgg />
             <div className="flex-grow container mx-auto max-w-5xl px-4 py-8">
               {children}
             </div>

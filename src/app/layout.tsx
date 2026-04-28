@@ -10,6 +10,8 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { LocaleProvider } from "@/i18n/LocaleProvider";
 import BackToTop from "@/components/BackToTop";
 import TerminalEasterEgg from "@/components/TerminalEasterEgg";
+import ChatWidget from "@/components/ChatWidget";
+import AIChatWidget from "@/components/ChatWidget";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -83,6 +85,8 @@ export default function RootLayout({
               <Header />
               <BackToTop />
               <TerminalEasterEgg />
+              <ChatWidget />
+              <AIChatWidget />
               <div className="flex-grow container mx-auto max-w-5xl px-4 py-8">
                 {children}
               </div>

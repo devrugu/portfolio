@@ -1,6 +1,6 @@
+"use client";
 import RelatedProjects from "@/components/RelatedProjects";
 import ProjectViewCounter from "@/components/ProjectViewCounter";
-"use client";
 
 import { useState } from 'react';
 import Image from 'next/image';

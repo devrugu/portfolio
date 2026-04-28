@@ -7,6 +7,7 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import MouseSpotlight from "@/components/MouseSpotlight";
 import CustomCursor from "@/components/CustomCursor";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { LocaleProvider } from "@/i18n/LocaleProvider";
 import BackToTop from "@/components/BackToTop";
 import TerminalEasterEgg from "@/components/TerminalEasterEgg";
 
@@ -74,19 +75,21 @@ export default function RootLayout({
             } catch(e) {}
           })();
         `}} />
-        <ThemeProvider>
-          <CustomCursor />
-          <MouseSpotlight />
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <BackToTop />
-            <TerminalEasterEgg />
-            <div className="flex-grow container mx-auto max-w-5xl px-4 py-8">
-              {children}
+        <LocaleProvider>
+          <ThemeProvider>
+            <CustomCursor />
+            <MouseSpotlight />
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <BackToTop />
+              <TerminalEasterEgg />
+              <div className="flex-grow container mx-auto max-w-5xl px-4 py-8">
+                {children}
+              </div>
+              <Footer />
             </div>
-            <Footer />
-          </div>
-        </ThemeProvider>
+          </ThemeProvider>
+        </LocaleProvider>
       </body>
     </html>
   );

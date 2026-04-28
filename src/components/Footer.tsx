@@ -1,13 +1,16 @@
+"use client";
 import Link from "next/link";
+import { useLocale } from "@/i18n/LocaleProvider";
 
 export default function Footer() {
+  const { t } = useLocale();
   const currentYear = new Date().getFullYear();
 
   return (
     <footer className="bg-background border-t border-gray-700/50 py-8">
       <div className="container mx-auto max-w-5xl px-4 flex flex-col md:flex-row items-center justify-between gap-4">
         <p className="text-sm text-gray-500">
-          © {currentYear} Uğurcan Yılmaz. All Rights Reserved.
+          © {currentYear} Uğurcan Yılmaz. {t.footer.rights}
         </p>
         <div className="flex items-center gap-6 text-sm text-gray-500">
           <Link href="/now" className="hover:text-accent transition-colors">

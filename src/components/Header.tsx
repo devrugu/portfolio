@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ThemeToggle from './ThemeToggle';
 import CommandPalette from './CommandPalette';
+import LocaleToggle from './LocaleToggle';
+import { useLocale } from '@/i18n/LocaleProvider';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const navLinks = [
+const navLinks = () => [
   { name: "About", href: "/about" },
   { name: "Projects", href: "/#projects" },
   { name: "Resume", href: "/resume" },
@@ -15,6 +17,7 @@ const navLinks = [
 ];
 
 export default function Header() {
+  const { t } = useLocale();
   const [isScrolled, setIsScrolled] = useState(false);
   const [availability, setAvailability] = useState<{ openToWork: boolean; statusText: string } | null>(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -87,8 +90,14 @@ export default function Header() {
                 className="flex items-center space-x-6 text-sm font-medium text-on-background"
                 onMouseLeave={() => setHoveredLink(null)}
               >
-                {navLinks.map((link) => (
-                  <li key={link.name} className="relative" onMouseEnter={() => setHoveredLink(link.href)}>
+                {[
+                  { name: t.nav.about, href: "/about" },
+                  { name: t.nav.projects, href: "/#projects" },
+                  { name: t.nav.resume, href: "/resume" },
+                  { name: t.nav.blog, href: "/blog" },
+                  { name: t.nav.contact, href: "/contact" },
+                ].map((link) => (
+                  <li key={link.href} className="relative" onMouseEnter={() => setHoveredLink(link.href)}>
                     <Link href={link.href} className="transition-colors hover:text-primary">
                       {link.name}
                     </Link>
@@ -105,6 +114,7 @@ export default function Header() {
                 ))}
               </ul>
             </nav>
+            <LocaleToggle />
             <ThemeToggle />
           </div>
 
@@ -145,8 +155,14 @@ export default function Header() {
           >
             <nav className="container mx-auto max-w-5xl px-4 py-4">
               <ul className="flex flex-col space-y-1">
-                {navLinks.map((link) => (
-                  <li key={link.name}>
+                {[
+                  { name: t.nav.about, href: "/about" },
+                  { name: t.nav.projects, href: "/#projects" },
+                  { name: t.nav.resume, href: "/resume" },
+                  { name: t.nav.blog, href: "/blog" },
+                  { name: t.nav.contact, href: "/contact" },
+                ].map((link) => (
+                  <li key={link.href}>
                     <Link
                       href={link.href}
                       onClick={() => setMenuOpen(false)}
@@ -158,8 +174,10 @@ export default function Header() {
                 ))}
               </ul>
               <div className="pt-3 pb-1 border-t border-gray-700/30 mt-2 flex items-center justify-between px-2">
-                <span className="text-sm text-gray-500">Toggle theme</span>
-                <ThemeToggle />
+                <div className="flex items-center gap-3">
+                  <LocaleToggle />
+                  <ThemeToggle />
+                </div>
               </div>
             </nav>
           </motion.div>

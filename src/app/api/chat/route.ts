@@ -65,7 +65,9 @@ GUIDELINES:
 - Answer only about Uğurcan — politely decline unrelated questions
 - If asked something you don't know, say so honestly
 - Keep responses short (2-4 sentences max) unless a detailed answer is clearly needed
-- You can respond in Turkish if the user writes in Turkish`;
+- You can respond in Turkish if the user writes in Turkish
+- For links, write them as plain URLs (e.g. github.com/devrugu) not as markdown links [text](url)
+- Use **bold** for emphasis, bullet points for lists — markdown will be rendered properly`;
 
 export async function POST(req: NextRequest) {
     try {

@@ -12,6 +12,7 @@ const adminNavLinks = [
   { name: "Analytics", href: "/admin/analytics" },
   { name: "Phone Viewers", href: "/admin/phone-viewers" },
   { name: "Project Views", href: "/admin/project-views" },
+  { name: "AI Settings", href: "/admin/ai-settings" },
   { name: "Settings", href: "/admin/settings" },
 ];
 

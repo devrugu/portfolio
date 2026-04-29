@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import dbConnect from '@/lib/mongodb';
+import SiteSettingsModel from '@/models/SiteSettings';
+import ChatLogModel from '@/models/ChatLog';
 
-const SYSTEM_PROMPT = `You are an AI assistant on Uğurcan Yılmaz's personal portfolio website. Your job is to answer questions about Uğurcan in a friendly, professional, and concise way.
+const BASE_SYSTEM_PROMPT = `You are an AI assistant on Uğurcan Yılmaz's personal portfolio website. Your job is to answer questions about Uğurcan in a friendly, professional, and concise way.
 
 Here is everything you know about Uğurcan:
 
@@ -66,8 +69,43 @@ GUIDELINES:
 - If asked something you don't know, say so honestly
 - Keep responses short (2-4 sentences max) unless a detailed answer is clearly needed
 - You can respond in Turkish if the user writes in Turkish
-- For links, write them as plain URLs (e.g. github.com/devrugu) not as markdown links [text](url)
+- For links, write them as plain URLs not as markdown links [text](url)
 - Use **bold** for emphasis, bullet points for lists — markdown will be rendered properly`;
+
+async function getAISettings() {
+    try {
+        await dbConnect();
+        const settings = await SiteSettingsModel.find({
+            key: { $in: ['aiEnabled', 'aiModel', 'aiTemperature', 'aiMaxTokens', 'aiSystemAppend', 'aiLogging'] }
+        }).lean() as any[];
+
+        const map: Record<string, any> = {};
+        settings.forEach((s: any) => { map[s.key] = s.value; });
+
+        return {
+            enabled: map.aiEnabled ?? true,
+            model: map.aiModel ?? 'mistral-small-latest',
+            temperature: map.aiTemperature ?? 0.7,
+            maxTokens: map.aiMaxTokens ?? 300,
+            systemAppend: map.aiSystemAppend ?? '',
+            logging: map.aiLogging ?? true,
+        };
+    } catch {
+        return { enabled: true, model: 'mistral-small-latest', temperature: 0.7, maxTokens: 300, systemAppend: '', logging: true };
+    }
+}
+
+export async function GET() {
+    const settings = await getAISettings();
+    return NextResponse.json({
+        enabled: settings.enabled,
+        model: settings.model,
+        temperature: settings.temperature,
+        maxTokens: settings.maxTokens,
+        systemAppend: settings.systemAppend,
+        logging: settings.logging,
+    });
+}
 
 export async function POST(req: NextRequest) {
     try {
@@ -77,6 +115,16 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Messages are required.' }, { status: 400 });
         }
 
+        const settings = await getAISettings();
+
+        if (!settings.enabled) {
+            return NextResponse.json({ error: 'AI assistant is currently disabled.' }, { status: 503 });
+        }
+
+        const systemPrompt = settings.systemAppend
+            ? `${BASE_SYSTEM_PROMPT}\n\nADDITIONAL INSTRUCTIONS:\n${settings.systemAppend}`
+            : BASE_SYSTEM_PROMPT;
+
         const res = await fetch('https://api.mistral.ai/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -84,13 +132,10 @@ export async function POST(req: NextRequest) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                model: 'mistral-small-latest',
-                messages: [
-                    { role: 'system', content: SYSTEM_PROMPT },
-                    ...messages,
-                ],
-                max_tokens: 300,
-                temperature: 0.7,
+                model: settings.model,
+                messages: [{ role: 'system', content: systemPrompt }, ...messages],
+                max_tokens: settings.maxTokens,
+                temperature: settings.temperature,
             }),
         });
 
@@ -102,6 +147,21 @@ export async function POST(req: NextRequest) {
 
         const data = await res.json();
         const reply = data.choices?.[0]?.message?.content ?? 'Sorry, I could not generate a response.';
+
+        // Log conversation if enabled
+        if (settings.logging) {
+            try {
+                await dbConnect();
+                const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() || 'unknown';
+                await ChatLogModel.create({
+                    messages: [...messages, { role: 'assistant', content: reply }],
+                    model: settings.model,
+                    ipAddress: ip,
+                });
+            } catch (e) {
+                console.error('Chat log error:', e);
+            }
+        }
 
         return NextResponse.json({ reply });
 
